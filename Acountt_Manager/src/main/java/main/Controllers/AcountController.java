@@ -1,6 +1,8 @@
 package main.Controllers;
 import main.DAO.AcountDAO;
+import main.DAO.RolDAO;
 import main.Objects.Acount;
+import main.Objects.Rol;
 import main.Sistem.JwtAuthenticationResponse;
 import main.Sistem.JwtTokenUtil;
 import main.Sistem.LoginRequest;
@@ -69,14 +71,25 @@ public class AcountController {
 
     @PostMapping("/user/register")
     public ResponseEntity<?> add(@RequestBody Acount acount) {
+        System.out.println("🚀 Primit cont nou: " + acount);
+
+        // Conversie din String în obiect Rol
+        Rol rol = RolDAO.findByNume(acount.getRolInput());
+        if (rol == null) {
+            return ResponseEntity.badRequest().body("Rol invalid!");
+        }
+
+        acount.setRol(rol);
         acount.setParola(passwordEncoder.encode(acount.getParola()));
-        boolean returned = AcountDAO.insert(acount);
-        if(returned)
-        {
+
+        boolean inserted = AcountDAO.insert(acount);
+
+        if (inserted) {
             acount = AcountDAO.findById_User(acount.getID());
             return new ResponseEntity<>(acount, HttpStatus.CREATED);
         }
 
         return new ResponseEntity<>(null, HttpStatus.UNPROCESSABLE_ENTITY);
     }
+
 }

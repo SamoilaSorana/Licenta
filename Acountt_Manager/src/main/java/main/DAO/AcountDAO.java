@@ -94,17 +94,21 @@ public class AcountDAO {
     public static boolean insert(Acount acount) {
         boolean inserted = false;
         Connection conn = DataBase.GetInfo();
-        String sql = "INSERT INTO conturi(ID,Username,Parola,Nume,Prenume,Email) "
-                + "VALUES(?,?,?,?,?,?)";
+        String sql = "INSERT INTO conturi(Username,Parola,Nume,Prenume,Email) VALUES(?,?,?,?,?)";
         try {
-            PreparedStatement stm = conn.prepareStatement(sql);
-            stm.setInt(1, acount.getID());
-            stm.setString(2, acount.getUsername());
-            stm.setString(3, acount.getParola());
-            stm.setString(4, acount.getNume());
-            stm.setString(5, acount.getPrenume());
-            stm.setString(6, acount.getEmail());
+            PreparedStatement stm = conn.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);
+            stm.setString(1, acount.getUsername());
+            stm.setString(2, acount.getParola());
+            stm.setString(3, acount.getNume());
+            stm.setString(4, acount.getPrenume());
+            stm.setString(5, acount.getEmail());
             stm.execute();
+
+            ResultSet rs = stm.getGeneratedKeys();
+            if (rs.next()) {
+                acount.setID(rs.getInt(1));
+            }
+
             inserted = true;
         } catch (SQLException e) {
             e.printStackTrace();
@@ -112,6 +116,7 @@ public class AcountDAO {
 
         return inserted;
     }
+
 
 
 }

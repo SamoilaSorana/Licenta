@@ -15,7 +15,7 @@ const Home = () => {
     useEffect(() => {
         const token = Cookies.get('token'); // Assuming token stored in cookie named 'token'
         if (token) {
-            axios.get('http://localhost:9000/api/auth/check-token', {
+            axios.get('http://localhost:4000/idm/api/auth/check-token', {
                 headers: {
                     Authorization: `Bearer ${token}`
                 }

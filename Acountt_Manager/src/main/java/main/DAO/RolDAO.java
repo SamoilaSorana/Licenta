@@ -33,6 +33,28 @@ public class RolDAO {
         return rol;
     }
 
+    public static Rol findByNume(String nume) {
+        Rol rol = null;
+        Connection conn = DataBase.GetInfo();
+        String sql = "SELECT * FROM roluri WHERE Rol = '" + nume + "'";
+        try {
+            Statement stm = conn.createStatement();
+            try (ResultSet rs = stm.executeQuery(sql)) {
+                if (rs.next()) {
+                    rol = new Rol(
+                            rs.getInt("ID"),
+                            rs.getString("Rol")
+                    );
+                    rol.setPermisiuni(PermisiuniDAO.getPermisions(rol.getID()));
+                }
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        return rol;
+    }
+
 
     public static Rol findByUserID(int ID) {
         Rol rol = null;

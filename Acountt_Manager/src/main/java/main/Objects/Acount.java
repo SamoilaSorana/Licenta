@@ -8,6 +8,7 @@ public class Acount {
     String Prenume;
     String Email;
     Rol rol;
+    String rolInput; // <-- adăugat
 
     public Acount(int ID, String username, String parola, String nume, String prenume, String email) {
         this.ID = ID;
@@ -77,6 +78,14 @@ public class Acount {
         this.rol = rol;
     }
 
+    public String getRolInput() {
+        return rolInput;
+    }
+
+    public void setRolInput(String rolInput) {
+        this.rolInput = rolInput;
+    }
+
     @Override
     public String toString() {
         return "Acount{" +
@@ -87,6 +96,7 @@ public class Acount {
                 ", Prenume='" + Prenume + '\'' +
                 ", Email='" + Email + '\'' +
                 ", Rol='" + rol + '\'' +
+                ", rolInput='" + rolInput + '\'' +
                 '}';
     }
 }

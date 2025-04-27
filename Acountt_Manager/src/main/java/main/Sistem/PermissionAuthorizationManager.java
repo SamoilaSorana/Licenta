@@ -72,8 +72,7 @@ public class PermissionAuthorizationManager implements AuthorizationManager<Requ
     }
 
     private boolean doesNotRequireLogin(String requestURI) {
-        if(requestURI.startsWith("/user/login")) return true;
-        return false;
+        return requestURI.startsWith("/user/login") || requestURI.startsWith("/user/register");
     }
 
     // Example: Define permissions based on URL
