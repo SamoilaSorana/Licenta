@@ -2,129 +2,156 @@ import React, { useEffect, useState } from "react";
 import Cookies from "js-cookie";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
+import background from "../images/imagess.png";
 
 const Lectures = () => {
-    const [permisiuni, setPermisiuni] = useState([]);
-    const [lectures, setLectures] = useState([]);
+    const [permissions, setPermissions] = useState([]);
+    const [chaptersWithLectures, setChaptersWithLectures] = useState([]);
     const [loading, setLoading] = useState(true);
+    const [expandedChapters, setExpandedChapters] = useState(new Set());
     const navigate = useNavigate();
 
-    const hasPermisiuni = (permisiune) => {
-        return permisiuni.includes(permisiune);
-    };
+    const hasPermission = (perm) => permissions.includes(perm);
 
     useEffect(() => {
         const token = Cookies.get("token");
-
         if (token) {
             axios.get("http://localhost:4000/idm/api/auth/check-token", {
-                headers: {
-                    Authorization: `Bearer ${token}`,
-                },
+                headers: { Authorization: `Bearer ${token}` },
             })
-                .then((response) => {
-                    console.log("✅ Token valid:", response.data);
-                    setPermisiuni(response.data.permisiuni);
-                })
-                .catch((error) => {
-                    console.log("❌ Token invalid:", error.response.data);
+                .then((res) => setPermissions(res.data.permisiuni))
+                .catch(() => {
                     Cookies.remove("token");
-                    setPermisiuni([]);
+                    setPermissions([]);
                 })
                 .finally(() => setLoading(false));
         } else {
-            setPermisiuni([]);
+            setPermissions([]);
             setLoading(false);
         }
     }, []);
 
     useEffect(() => {
-        if (hasPermisiuni("VIEW_LECTURES")) {
-            axios.get("http://localhost:4000/logic/lecture/all", {
-                headers: {
-                    Authorization: `Bearer ${Cookies.get("token")}`,
-                },
+        if (hasPermission("VIEW_LECTURES")) {
+            axios.get("http://localhost:4000/logic/lecture/all" +
+                "", {
+                headers: { Authorization: `Bearer ${Cookies.get("token")}` },
             })
-                .then((response) => {
-                    setLectures(response.data);
+                .then((res) => {
+                    setChaptersWithLectures(res.data);
+                    const initialExpanded = new Set(res.data.map(item => item.chapter.id));
+                    setExpandedChapters(initialExpanded);
                 })
-                .catch((error) => {
-                    console.log("Eroare la preluarea lecțiilor:", error);
-                });
+                .catch((err) => console.log("Eroare:", err));
         }
-    }, [permisiuni]);
+    }, [permissions]);
 
-    if (loading) {
-        return <h2>Se încarcă...</h2>;
-    }
+    const handleStartLecture = (id) => navigate(`/lecture/${id}`);
 
-    if (!hasPermisiuni("VIEW_LECTURES")) {
-        return <h2>Nu ai permisiunea să vezi lecțiile.</h2>;
-    }
-
-    const handleStartLecture = (lectureId) => {
-        navigate(`/lecture/${lectureId}`);
+    const toggleChapter = (chapterId) => {
+        setExpandedChapters(prev => {
+            const newSet = new Set(prev);
+            newSet.has(chapterId) ? newSet.delete(chapterId) : newSet.add(chapterId);
+            return newSet;
+        });
     };
 
-    // Stiluri directe
-    const styles = {
-        page: {
-            padding: "20px",
-            maxWidth: "1200px",
-            margin: "0 auto",
-        },
-        container: {
-            display: "grid",
-            gridTemplateColumns: "repeat(auto-fill, minmax(300px, 1fr))",
-            gap: "20px",
-        },
-        card: {
-            backgroundColor: "#f9f9f9",
-            border: "1px solid #ddd",
-            padding: "20px",
-            borderRadius: "12px",
-            boxShadow: "0 2px 8px rgba(0, 0, 0, 0.1)",
-            display: "flex",
-            flexDirection: "column",
-            justifyContent: "space-between",
-        },
-        button: {
-            marginTop: "15px",
-            padding: "10px 20px",
-            border: "none",
-            backgroundColor: "#4CAF50",
-            color: "white",
-            fontSize: "16px",
-            borderRadius: "8px",
-            cursor: "pointer",
-            transition: "background-color 0.3s ease",
-        },
-        buttonHover: {
-            backgroundColor: "#45a049",
-        }
-    };
+    if (loading) return <h2>Se încarcă...</h2>;
+    if (!hasPermission("VIEW_LECTURES")) return <h2>Nu ai permisiunea să vezi lecțiile.</h2>;
 
     return (
-        <div style={styles.page}>
-            <h1>Lista Lecțiilor</h1>
-            <div style={styles.container}>
-                {lectures.map((lecture) => (
-                    <div key={lecture.lectureId} style={styles.card}>
-                        <h2>{lecture.titlu}</h2>
-                        <p><strong>Dificultate:</strong> {lecture.dificultate}</p>
-                        <p>{lecture.rezumat}</p>
-
-                        <button
-                            style={styles.button}
-                            onClick={() => handleStartLecture(lecture.lectureId)}
-                            onMouseOver={(e) => e.target.style.backgroundColor = styles.buttonHover.backgroundColor}
-                            onMouseOut={(e) => e.target.style.backgroundColor = styles.button.backgroundColor}
+        <div
+            style={{
+                backgroundImage: `url(${background})`,
+                backgroundSize: "cover",
+                backgroundRepeat: "no-repeat",
+                backgroundPosition: "top center",
+                minHeight: "100vh",
+                paddingTop: "200px",
+                paddingLeft: "40px",
+                paddingRight: "40px",
+                paddingBottom: "60px"
+            }}
+        >
+            {chaptersWithLectures.map(({ chapter, lectures }) => {
+                const isExpanded = expandedChapters.has(chapter.id);
+                return (
+                    <div key={chapter.id} style={{ marginBottom: "40px" }}>
+                        <div
+                            onClick={() => toggleChapter(chapter.id)}
+                            style={{
+                                backgroundColor: "rgba(255, 255, 255, 0.95)",
+                                borderRadius: "10px",
+                                padding: "15px 20px",
+                                cursor: "pointer",
+                                fontSize: "20px",
+                                fontWeight: "bold",
+                                boxShadow: "0 4px 8px rgba(0,0,0,0.1)",
+                                marginBottom: "10px",
+                                display: "flex",
+                                justifyContent: "space-between",
+                                alignItems: "center",
+                                transition: "all 0.3s ease"
+                            }}
                         >
-                            Începe lecția
-                        </button>
+                            <span>{`Chapter ${chapter.id} – ${chapter.name} – ${chapter.grade} – ${chapter.subject}`}</span>
+                            <span style={{ fontSize: "24px", transform: isExpanded ? "rotate(90deg)" : "rotate(0deg)", transition: "transform 0.3s" }}>
+                                ▶
+                            </span>
+                        </div>
+
+                        <div style={{
+                            maxHeight: isExpanded ? "2000px" : "0",
+                            overflow: "hidden",
+                            transition: "max-height 0.5s ease-in-out"
+                        }}>
+                            <div style={{
+                                display: "grid",
+                                gridTemplateColumns: "repeat(auto-fill, minmax(300px, 1fr))",
+                                gap: "25px"
+                            }}>
+                                {lectures.map((lecture) => (
+                                    <div key={lecture.lectureId} style={{
+                                        background: "rgba(255, 255, 255, 0.85)",
+                                        borderRadius: "16px",
+                                        padding: "25px",
+                                        boxShadow: "0 8px 15px rgba(0,0,0,0.1)",
+                                        backdropFilter: "blur(4px)",
+                                        transition: "transform 0.2s",
+                                    }}
+                                         onMouseEnter={(e) => e.currentTarget.style.transform = "scale(1.03)"}
+                                         onMouseLeave={(e) => e.currentTarget.style.transform = "scale(1.0)"}
+                                    >
+                                        <h2 style={{ fontSize: "22px", color: "#222" }}>{lecture.titlu}</h2>
+                                        <p><strong>Dificultate:</strong> {lecture.dificultate}</p>
+                                        <p style={{ marginTop: "10px", color: "#444" }}>
+                                            {lecture.rezumat || "Această lecție te va ajuta să înțelegi mai bine conceptele matematice."}
+                                        </p>
+                                        <button
+                                            onClick={() => handleStartLecture(lecture.lectureId)}
+                                            style={{
+                                                marginTop: "20px",
+                                                backgroundColor: "#1976d2",
+                                                color: "#fff",
+                                                border: "none",
+                                                padding: "10px 25px",
+                                                borderRadius: "8px",
+                                                fontSize: "16px",
+                                                cursor: "pointer",
+                                                transition: "background-color 0.3s"
+                                            }}
+                                            onMouseOver={(e) => e.target.style.backgroundColor = "#0d47a1"}
+                                            onMouseOut={(e) => e.target.style.backgroundColor = "#1976d2"}
+                                        >
+                                            Începe lecția
+                                        </button>
+                                    </div>
+                                ))}
+                            </div>
+                        </div>
                     </div>
-                ))}
-            </div>
+                );
+            })}
         </div>
     );
 };

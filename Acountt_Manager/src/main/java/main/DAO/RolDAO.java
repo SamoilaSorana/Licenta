@@ -29,6 +29,9 @@ public class RolDAO {
         } catch (SQLException e) {
             e.printStackTrace();
         }
+        finally {
+            DataBase.closeConnection();
+        }
 
         return rol;
     }
@@ -50,6 +53,9 @@ public class RolDAO {
             }
         } catch (SQLException e) {
             e.printStackTrace();
+        }
+        finally {
+            DataBase.closeConnection();
         }
 
         return rol;
@@ -74,6 +80,9 @@ public class RolDAO {
             }
         } catch (SQLException e) {
             e.printStackTrace();
+        }
+        finally {
+            DataBase.closeConnection();
         }
 
         return rol;

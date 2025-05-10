@@ -24,8 +24,17 @@ app.use('/idm', createProxyMiddleware({
         '^/idm': '', // elimină /idm din URL
     },
 }));
+// Proxy pentru /idm -> http://localhost:6000
+app.use('/logic', createProxyMiddleware({
+    target: 'http://localhost:11000',
+    changeOrigin: true,
+    pathRewrite: {
+        '^/logic': '', // elimină /idm din URL
+    },
+}));
 
 // Pornire server pe portul 4000
 app.listen(4000, () => {
     console.log('Gateway rulează pe http://localhost:4000');
 });
+

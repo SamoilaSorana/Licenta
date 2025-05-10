@@ -7,6 +7,7 @@ public class Lecture {
     private Integer exampleQuestionId;
     private String continut;
     private String rezumat;
+    private Chapter chapter;
 
 
     public Lecture() {
@@ -19,6 +20,7 @@ public class Lecture {
         this.exampleQuestionId = exampleQuestionId;
         this.continut = continut;
         this.rezumat = rezumat;
+
     }
 
     public int getLectureId() {
@@ -69,6 +71,14 @@ public class Lecture {
         this.rezumat = rezumat;
     }
 
+    public Chapter getChapter() {
+        return chapter;
+    }
+
+    public void setChapter(Chapter chapter) {
+        this.chapter = chapter;
+    }
+
     @Override
     public String toString() {
         return "Lecture{" +
@@ -79,4 +89,6 @@ public class Lecture {
                 ", continut='" + continut + '\'' +
                 '}';
     }
+
+
 }

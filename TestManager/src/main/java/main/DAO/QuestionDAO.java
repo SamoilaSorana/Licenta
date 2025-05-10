@@ -1,11 +1,12 @@
 package main.DAO;
 
 
+import Objects.Answer;
+import Objects.Question;
 import main.Sistem.DataBase;
 
 import java.sql.*;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.*;
 
 public class QuestionDAO {
     public static List<Question> findAll() {
@@ -27,9 +28,57 @@ public class QuestionDAO {
         } catch (SQLException e) {
             e.printStackTrace();
         }
+        finally {
+            DataBase.closeConnection();
+        }
 
         return list;
     }
+
+
+    public static List<Map<String, Object>> convertToSerializableList(List<AbstractMap.SimpleEntry<Answer, Boolean>> entries) {
+        List<Map<String, Object>> result = new ArrayList<>();
+
+        for (AbstractMap.SimpleEntry<Answer, Boolean> entry : entries) {
+            Map<String, Object> map = new HashMap<>();
+            map.put("answer", entry.getKey());      // Answer object
+            map.put("correct", entry.getValue());   // Boolean
+            result.add(map);
+        }
+
+        return result;
+    }
+
+
+    public static List<Question> findbylectureId(int lectureId) {
+        List<Question> list = new ArrayList<>();
+        Connection conn = DataBase.GetInfo();
+        String sql = "SELECT Q.question_id, Q.text FROM questions Q  JOIN questions_for_lecture QL ON Q.question_id = QL.question_id WHERE QL.lecture_id='"+lectureId+"'";
+
+        try (Statement stmt = conn.createStatement();
+             ResultSet rs = stmt.executeQuery(sql)) {
+
+            while (rs.next()) {
+                Question q = new Question(
+                        rs.getInt("question_id"),
+                        rs.getString("text")
+                );
+                q.setAnswers(convertToSerializableList(AnswerDAO.findbyquestionId(q.getId())));
+                list.add(q);
+            }
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        finally {
+            DataBase.closeConnection();
+        }
+
+        return list;
+    }
+
+
+
 
     public static boolean insert(Question question) {
         Connection conn = DataBase.GetInfo();
@@ -42,6 +91,9 @@ public class QuestionDAO {
         } catch (SQLException e) {
             e.printStackTrace();
             return false;
+        }
+        finally {
+            DataBase.closeConnection();
         }
     }
 
@@ -56,6 +108,9 @@ public class QuestionDAO {
             }
         } catch (SQLException e) {
             e.printStackTrace();
+        }
+        finally {
+            DataBase.closeConnection();
         }
 
         return null;

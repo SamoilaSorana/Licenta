@@ -1,80 +1,70 @@
-import React, {useState} from "react";
+import React, { useState } from "react";
 import Cookies from "js-cookie";
-import {PersonCircle} from "react-bootstrap-icons";
-
-
+import { PersonCircle } from "react-bootstrap-icons";
 import './style.css';
 
-function Navbar() {
 
+function Navbar() {
     const [isDropdownOpen, setIsDropdownOpen] = useState(false);
 
-    const toggleDropdown = () => {
-        setIsDropdownOpen(!isDropdownOpen);
-    };
+    const toggleDropdown = () => setIsDropdownOpen(!isDropdownOpen);
+
     const logOut = () => {
-        Cookies.remove('googleID')
-        Cookies.remove('user_id')
-
+        Cookies.remove('googleID');
+        Cookies.remove('user_id');
+        window.location.href = '/';
     };
 
-    const myPetsPage = () => {
-
-    }
+    const userLoggedIn = Cookies.get('user_id');
 
     return (
-        <nav className="navbar navbar-expand-lg navbar-dark bg-dark">
-            <button className="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav"
-                    aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
-                <span className="navbar-toggler-icon"></span>
-            </button>
-            <div className="collapse navbar-collapse" id="navbarNav">
-                <ul className="navbar-nav">
-                    <li className="nav-item active">
-                        <a className="nav-link" href="/">Home</a>
-                    </li>
-                    <li className="nav-item active">
-                        <a className="nav-link" href="/lectures">Lectures</a>
-                    </li>
-                    <li className="nav-item active">
-                        <a className="nav-link" href="/donations">Donations</a>
-                    </li>
-                    <li className="nav-item active">
-                        <a className="nav-link" href="/contact">Contact</a>
-                    </li>
-                </ul>
-                <ul className="navbar-nav ms-auto">
-                    {Cookies.get('user_id') ? (
-                            <li className="nav-item active">
-                                <button className="button btn btn-dark btn-xl dropdown" tabIndex="0" onClick={toggleDropdown}>
-                                    <PersonCircle className="btn-icon"></PersonCircle>
+        <nav className="navbar navbar-expand-lg navbar-dark custom-navbar">
+            <div className="container">
+                <a className="navbar-brand" href="/">About</a>
+                <button className="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                    <span className="navbar-toggler-icon"></span>
+                </button>
+
+                <div className="collapse navbar-collapse" id="navbarNav">
+                    <ul className="navbar-nav me-auto mb-2 mb-lg-0">
+                        <li className="nav-item">
+                            <a className="nav-link" href="/lectures">Lectures</a>
+                        </li>
+                        <li className="nav-item">
+                            <a className="nav-link" href="/donations">Donations</a>
+                        </li>
+                        <li className="nav-item">
+                            <a className="nav-link" href="/contact">Contact</a>
+                        </li>
+                    </ul>
+
+                    <ul className="navbar-nav">
+                        {userLoggedIn ? (
+                            <li className="nav-item dropdown">
+                                <button className="btn nav-profile-icon" onClick={toggleDropdown}>
+                                    <PersonCircle size={28} />
                                 </button>
-                                <div className={`dropdown-menu ${isDropdownOpen ? "show" : ""}`}>
-                                    <a className="dropdown-item" href="#" onClick={logOut}>Log Out</a>
-                                    <a className="dropdown-item" href="/adoptionRequests">My Pets</a>
-                                    <a className="dropdown-item" href="/requests">Applied for...</a>
-                                </div>
+                                {isDropdownOpen && (
+                                    <ul className="dropdown-menu dropdown-menu-end show profile-dropdown">
+                                        <li><button className="dropdown-item" onClick={logOut}>Log Out</button></li>
+                                    </ul>
+                                )}
                             </li>
-                        ) :
-                        (
-                            <li className="nav-item active">
-                                <a className="nav-link" href="/login">Login</a>
-                            </li>
-                        )
-                    }
-                    {Cookies.get('user_id') ? (
-                            <div/>
-                        ) :
-                        (
-                            <li className="nav-item active">
-                                <a className="nav-link" href="/register">Register</a>
-                            </li>
-                        )
-                    }
-                </ul>
+                        ) : (
+                            <>
+                                <li className="nav-item">
+                                    <a className="nav-link" href="/login">Login</a>
+                                </li>
+                                <li className="nav-item">
+                                    <a className="nav-link" href="/register">Register</a>
+                                </li>
+                            </>
+                        )}
+                    </ul>
+                </div>
             </div>
         </nav>
     );
-};
+}
 
 export default Navbar;

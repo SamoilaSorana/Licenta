@@ -1,8 +1,10 @@
 package main.Controllers;
 
 import Objects.Lecture;
+import Objects.Question;
 import main.DAO.LectureDAO;
 
+import main.DAO.QuestionDAO;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -26,6 +28,18 @@ public class LectureController {
             return new ResponseEntity<>(null, HttpStatus.NOT_FOUND);
         }
         return new ResponseEntity<>(lecture, HttpStatus.OK);
+    }
+
+    @GetMapping("/lecture/chapter/{chapterId}")
+    public List<Lecture> getLecturesByChapter(@PathVariable int chapterId) {
+        return LectureDAO.findByChapterId(chapterId);
+    }
+
+
+    @GetMapping("/lecture/{id}/test")
+    public ResponseEntity<?> findtest(@PathVariable("id") Integer id) {
+        List<Question> list = QuestionDAO.findbylectureId(id);
+        return new ResponseEntity<>(list, HttpStatus.OK);
     }
 
     @PostMapping("/lecture")

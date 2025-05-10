@@ -15,9 +15,9 @@ public class AttemptController {
 
     @PostMapping("/attempt")
     public ResponseEntity<?> add(@RequestBody Attempt attempt) {
-        boolean inserted = AttemptDAO.insert(attempt);
-        return inserted
-                ? new ResponseEntity<>(attempt, HttpStatus.CREATED)
+        int inserted = AttemptDAO.insert(attempt);
+        return inserted!=-1
+                ? new ResponseEntity<>(inserted, HttpStatus.CREATED)
                 : new ResponseEntity<>(HttpStatus.UNPROCESSABLE_ENTITY);
     }
 

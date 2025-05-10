@@ -6,6 +6,8 @@ import Home from "./pages/home";
 import Register from "./pages/register";
 import Lectures from "./pages/lectures";
 import LecturePage from "./pages/lecturePage";
+import TestPage from "./pages/testpage";
+
 
 
 function App() {
@@ -19,6 +21,7 @@ function App() {
             <Route path='/register' element={<Register/>}/>
             <Route path='/lectures' element={<Lectures/>}/>
             <Route path="/lecture/:id" element={<LecturePage />} />
+            <Route path="/lecture/:id/test" element={<TestPage />} />
 
 
         </Routes>

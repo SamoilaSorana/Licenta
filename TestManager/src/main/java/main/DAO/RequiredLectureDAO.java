@@ -25,6 +25,9 @@ public class RequiredLectureDAO {
         } catch (SQLException e) {
             e.printStackTrace();
         }
+        finally {
+            DataBase.closeConnection();
+        }
         return false;
     }
 
@@ -46,6 +49,9 @@ public class RequiredLectureDAO {
         } catch (SQLException e) {
             e.printStackTrace();
         }
+        finally {
+            DataBase.closeConnection();
+        }
         return list;
     }
 
@@ -61,6 +67,9 @@ public class RequiredLectureDAO {
 
         } catch (SQLException e) {
             e.printStackTrace();
+        }
+        finally {
+            DataBase.closeConnection();
         }
         return false;
     }
@@ -81,6 +90,9 @@ public class RequiredLectureDAO {
 
         } catch (SQLException e) {
             e.printStackTrace();
+        }
+        finally {
+            DataBase.closeConnection();
         }
         return false;
     }

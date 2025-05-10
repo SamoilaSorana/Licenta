@@ -1,6 +1,7 @@
 package main.DAO;
 
-import main.Objects.QuestionForLecture;
+
+import Objects.QuestionForLecture;
 import main.Sistem.DataBase;
 
 import java.sql.Connection;
@@ -22,6 +23,9 @@ public class QuestionForLectureDAO {
         } catch (SQLException e) {
             e.printStackTrace();
         }
+        finally {
+            DataBase.closeConnection();
+        }
         return false;
     }
 
@@ -40,6 +44,9 @@ public class QuestionForLectureDAO {
 
         } catch (SQLException e) {
             e.printStackTrace();
+        }
+        finally {
+            DataBase.closeConnection();
         }
         return list;
     }

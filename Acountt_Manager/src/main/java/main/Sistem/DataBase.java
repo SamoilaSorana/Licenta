@@ -9,6 +9,16 @@ public class DataBase {
     private static final String username = "root";
     private static final String password = "1234";
     private static Connection conn = null;
+    public static void closeConnection() {
+        if (conn != null) {
+            try {
+                conn.close();
+                conn = null;
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
+        }
+    }
     public static Connection GetInfo()
     {
         if(conn == null)

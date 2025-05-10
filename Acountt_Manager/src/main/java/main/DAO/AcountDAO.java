@@ -33,6 +33,9 @@ public class AcountDAO {
         } catch (SQLException e) {
             e.printStackTrace();
         }
+        finally {
+            DataBase.closeConnection();
+        }
 
         return AcountList;
     }
@@ -59,6 +62,9 @@ public class AcountDAO {
         } catch (SQLException e) {
             e.printStackTrace();
         }
+        finally {
+            DataBase.closeConnection();
+        }
 
         return acount;
     }
@@ -84,6 +90,9 @@ public class AcountDAO {
             }
         } catch (SQLException e) {
             e.printStackTrace();
+        }
+        finally {
+            DataBase.closeConnection();
         }
 
         return acount;
@@ -112,6 +121,9 @@ public class AcountDAO {
             inserted = true;
         } catch (SQLException e) {
             e.printStackTrace();
+        }
+        finally {
+            DataBase.closeConnection();
         }
 
         return inserted;

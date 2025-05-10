@@ -27,12 +27,16 @@ public class LectureDAO {
                             rs.getObject("example_question_id") != null ? rs.getInt("example_question_id") : null,
                             rs.getString("continut"),
                             rs.getString("rezumat")
+
                     );
+                    lecture.setChapter(ChapterDAO.findById(rs.getInt("chapter_id")));
                     list.add(lecture);
                 }
             }
         } catch (SQLException e) {
             e.printStackTrace();
+        } finally {
+            DataBase.closeConnection();
         }
 
         return list;
@@ -58,9 +62,12 @@ public class LectureDAO {
                         rs.getString("continut"),
                         rs.getString("rezumat")
                 );
+                lecture.setChapter(ChapterDAO.findById(rs.getInt("chapter_id")));
             }
         } catch (SQLException e) {
             e.printStackTrace();
+        } finally {
+            DataBase.closeConnection();
         }
 
         return lecture;
@@ -89,6 +96,8 @@ public class LectureDAO {
             return rowsInserted > 0;
         } catch (SQLException e) {
             e.printStackTrace();
+        } finally {
+            DataBase.closeConnection();
         }
 
         return false;
@@ -113,11 +122,50 @@ public class LectureDAO {
                         rs.getString("continut"),
                         rs.getString("rezumat")
                 );
+                lecture.setChapter(ChapterDAO.findById(rs.getInt("chapter_id")));
             }
         } catch (SQLException e) {
             e.printStackTrace();
+        } finally {
+            DataBase.closeConnection();
         }
 
         return lecture;
     }
+
+
+    public static List<Lecture> findByChapterId(int chapterId) {
+        List<Lecture> lectures = new ArrayList<>();
+        Connection conn = DataBase.GetInfo(); // deschide conexiunea
+
+        String sql = "SELECT * FROM lecture WHERE chapter_id = ?";
+
+        try {
+            PreparedStatement ps = conn.prepareStatement(sql);
+            ps.setInt(1, chapterId);
+            ResultSet rs = ps.executeQuery();
+
+            while (rs.next()) {
+                Lecture lecture = new Lecture(
+                        rs.getInt("lecture_id"),
+                        rs.getString("titlu"),
+                        rs.getInt("dificultate"),
+                        rs.getObject("example_question_id") != null ? rs.getInt("example_question_id") : null,
+                        rs.getString("continut"),
+                        rs.getString("rezumat")
+                );
+
+                lecture.setChapter(ChapterDAO.findById(rs.getInt("chapter_id")));
+                lectures.add(lecture);
+            }
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+        } finally {
+            DataBase.closeConnection(); // închide conexiunea
+        }
+
+        return lectures;
+    }
 }
+

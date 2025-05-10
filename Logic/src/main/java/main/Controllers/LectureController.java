@@ -1,38 +1,52 @@
 package main.Controllers;
 
 
+import Objects.Chapter;
+import Objects.Lecture;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.JsonMappingException;
+import main.Logic.LecturesLogic;
+import main.Logic.TestLogic;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import java.util.Base64;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import java.util.Map;
 
 import java.util.List;
+
+import static main.Sistem.HelperFunctions.getIdfromheader;
 
 @RestController
 @CrossOrigin(origins = "*")
 public class LectureController {
 
+
+
     @GetMapping("/lecture/all")
-    public ResponseEntity<?> findAll() {
-        List<Lecture> list = LectureDAO.findAll();
-        return new ResponseEntity<>(list, HttpStatus.OK);
+    public ResponseEntity<?> getall(@RequestHeader("Authorization") String authHeader) {
+        int id = getIdfromheader(authHeader);
+        List<Map<String,Object>> lectureList = LecturesLogic.GetLectures(id);
+        return new ResponseEntity<>(lectureList, HttpStatus.OK);
     }
 
-    @GetMapping("/lecture/{id}")
-    public ResponseEntity<?> findById(@PathVariable("id") Integer id) {
-        Lecture lecture = LectureDAO.findById(id);
-        if (lecture == null) {
-            return new ResponseEntity<>(null, HttpStatus.NOT_FOUND);
-        }
-        return new ResponseEntity<>(lecture, HttpStatus.OK);
+    @GetMapping("/lecture/{id}/test")
+    public ResponseEntity<?> gettest(@RequestHeader("Authorization") String authHeader, @PathVariable int id) {
+      return new ResponseEntity<>(TestLogic.getQuestionForTest(id), HttpStatus.OK);
     }
 
-    @PostMapping("/lecture")
-    public ResponseEntity<?> add(@RequestBody Lecture lecture) {
-        boolean inserted = LectureDAO.insert(lecture);
-        if (inserted) {
-            lecture = LectureDAO.findLast(); // sau după ID dacă îl știi
-            return new ResponseEntity<>(lecture, HttpStatus.CREATED);
-        }
-        return new ResponseEntity<>(null, HttpStatus.UNPROCESSABLE_ENTITY);
+
+    @GetMapping("/lecture/chapter/{chapterId}")
+    public ResponseEntity<?> getLecturesByChapter(@PathVariable int chapterId) {
+        List<Lecture> lectures = LecturesLogic.getLecturesByChapterId(chapterId);
+        return new ResponseEntity<>(lectures, HttpStatus.OK);}
+
+
+    @GetMapping("/lecture/all_unfiltered")
+    public ResponseEntity<?> getall_unfiltered(@RequestHeader("Authorization") String authHeader) {
+        int id = getIdfromheader(authHeader);
+        List<Map<String,Object>> lectureList = LecturesLogic.GetLecturesWithoutFilter(id);
+        return new ResponseEntity<>(lectureList, HttpStatus.OK);
     }
 }

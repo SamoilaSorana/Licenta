@@ -1,5 +1,6 @@
 package main;
 
+
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.autoconfigure.jdbc.DataSourceAutoConfiguration;
@@ -13,6 +14,6 @@ public class Main {
         SpringApplication app = new SpringApplication(Main.class);
         app.setDefaultProperties(Collections.singletonMap("server.port","11000"));
         app.run(args);
-        Lecture lecture = new Lecture();
+
     }
 }

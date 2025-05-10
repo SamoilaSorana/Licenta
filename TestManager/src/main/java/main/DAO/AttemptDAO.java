@@ -8,20 +8,28 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class AttemptDAO {
-    public static boolean insert(Attempt attempt) {
+    public static int insert(Attempt attempt) {
         String sql = "INSERT INTO attempts(user_id, lecture_id) VALUES (?, ?)";
+        int generatedId = -1;
+
         try {
-            PreparedStatement statement = DataBase.GetInfo().prepareStatement(sql);
+            PreparedStatement statement = DataBase.GetInfo().prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);
             statement.setInt(1, attempt.getUserId());
             statement.setInt(2, attempt.getLectureId());
             statement.executeUpdate();
-            return true;
+
+            ResultSet rs = statement.getGeneratedKeys();
+            if (rs.next()) {
+                generatedId = rs.getInt(1);
+            }
         } catch (SQLException e) {
             e.printStackTrace();
-            return false;
+        } finally {
+            DataBase.closeConnection();
         }
-    }
 
+        return generatedId;
+    }
     public static List<Attempt> findAll() {
         List<Attempt> list = new ArrayList<>();
         String sql = "SELECT * FROM attempts";
@@ -38,6 +46,9 @@ public class AttemptDAO {
             }
         } catch (SQLException e) {
             e.printStackTrace();
+        }
+        finally {
+            DataBase.closeConnection();
         }
         return list;
     }

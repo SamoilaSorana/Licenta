@@ -28,6 +28,9 @@ public class PermisiuniDAO {
         } catch (SQLException e) {
             e.printStackTrace();
         }
+        finally {
+            DataBase.closeConnection();
+        }
         return PermisionList;
 
 
@@ -50,6 +53,9 @@ public class PermisiuniDAO {
             }
         } catch (SQLException e) {
             e.printStackTrace();
+        }
+        finally {
+            DataBase.closeConnection();
         }
         return PermisionList;
 
