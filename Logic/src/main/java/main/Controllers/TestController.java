@@ -20,7 +20,7 @@ import static main.Sistem.HelperFunctions.getIdfromheader;
 @CrossOrigin(origins = "*")
 public class TestController {
     @PostMapping("/lecture/{id}/test/submit")
-    public ResponseEntity<?> myEndpoint(@RequestBody List<AnswerFromClient>answers,@RequestHeader("Authorization") String authHeader, @PathVariable int id) {
+    public ResponseEntity<?> SubmitTest(@RequestBody List<AnswerFromClient>answers,@RequestHeader("Authorization") String authHeader, @PathVariable int id) {
         int userId = getIdfromheader(authHeader);
         TestLogic.submitAttemptFromAnswers(userId,id,answers);
         double grade=TestLogic.EvaluateTest(id,answers);
@@ -30,6 +30,13 @@ public class TestController {
             TestLogic.sendCompleted(completed);
         }
         return new ResponseEntity<>(grade, HttpStatus.OK);
+    }
+
+    @GetMapping("/attempts/all")
+    public ResponseEntity<?> getAttempts(@RequestHeader("Authorization") String authHeader) {
+        int id = getIdfromheader(authHeader);
+        List<Map<String,Object>> attempts = TestLogic.getAllEvaluatedAttempts(id);
+        return new ResponseEntity<>(attempts, HttpStatus.OK);
     }
 
 

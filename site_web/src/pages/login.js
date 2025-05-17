@@ -28,7 +28,7 @@ const Login = () => {
             if (response.status === 200 && data.token) {
                 Cookies.set('token', data.token);
                 console.log("✅ Login successful, token saved!");
-                navigate('/');
+                window.location.href="/";
             } else if (response.status === 404) {
                 alert('❌ Username or password incorrect');
             } else {

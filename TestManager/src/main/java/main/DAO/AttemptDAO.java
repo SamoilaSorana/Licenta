@@ -52,5 +52,32 @@ public class AttemptDAO {
         }
         return list;
     }
+
+    public static List<Attempt> findAllbyUserId(int userId) {
+        List<Attempt> list = new ArrayList<>();
+        String sql = "SELECT * FROM attempts WHERE user_id = '" + userId + "'";
+        try {
+            Statement statement = DataBase.GetInfo().createStatement();
+            ResultSet rs = statement.executeQuery(sql);
+            while (rs.next()) {
+                Attempt a = new Attempt(
+                        rs.getInt("attempt_id"),
+                        rs.getInt("user_id"),
+                        rs.getInt("lecture_id")
+                );
+                list.add(a);
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        finally {
+            DataBase.closeConnection();
+        }
+        return list;
+    }
+
+
+
+
 }
 

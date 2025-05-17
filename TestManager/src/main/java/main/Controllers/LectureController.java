@@ -22,7 +22,7 @@ public class LectureController {
     }
 
     @GetMapping("/lecture/{id}")
-    public ResponseEntity<?> findById(@PathVariable("id") Integer id) {
+    public ResponseEntity<?> findById(@PathVariable("id") int id) {
         Lecture lecture = LectureDAO.findById(id);
         if (lecture == null) {
             return new ResponseEntity<>(null, HttpStatus.NOT_FOUND);

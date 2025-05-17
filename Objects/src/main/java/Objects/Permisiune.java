@@ -1,4 +1,4 @@
-package main.Objects;
+package Objects;
 
 public class Permisiune {
     int ID;

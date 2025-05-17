@@ -49,4 +49,10 @@ public class LectureController {
         List<Map<String,Object>> lectureList = LecturesLogic.GetLecturesWithoutFilter(id);
         return new ResponseEntity<>(lectureList, HttpStatus.OK);
     }
+    @GetMapping("/lecture/count")
+    public ResponseEntity<?> getlecturecount(@RequestHeader("Authorization") String authHeader) {
+        int id = getIdfromheader(authHeader);
+        Map<String,Object> lecturecount = LecturesLogic.GetLectureCount(id);
+        return new ResponseEntity<>(lecturecount, HttpStatus.OK);
+    }
 }

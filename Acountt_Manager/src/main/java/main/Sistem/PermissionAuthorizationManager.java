@@ -1,7 +1,8 @@
 package main.Sistem;
 
+import Objects.Permisiune;
 import main.DAO.PermisiuniDAO;
-import main.Objects.Permisiune;
+
 import org.springframework.security.authorization.AuthorizationDecision;
 import org.springframework.security.authorization.AuthorizationManager;
 import org.springframework.security.core.Authentication;

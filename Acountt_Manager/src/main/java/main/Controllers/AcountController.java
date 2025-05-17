@@ -1,20 +1,18 @@
 package main.Controllers;
+import Objects.Acount;
+import Objects.Rol;
 import main.DAO.AcountDAO;
 import main.DAO.RolDAO;
-import main.Objects.Acount;
-import main.Objects.Rol;
+
 import main.Sistem.JwtAuthenticationResponse;
 import main.Sistem.JwtTokenUtil;
-import main.Sistem.LoginRequest;
-import org.apache.catalina.User;
+import Objects.LoginRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 import java.util.List;
-
-import static javax.swing.text.html.parser.DTDConstants.ID;
 
 @RestController
 @CrossOrigin(origins = "*")
@@ -48,7 +46,7 @@ public class AcountController {
         return ResponseEntity.ok(new JwtAuthenticationResponse(token));
     }
 
-    @GetMapping("/admin/acounts/{id}")
+    @GetMapping("/user/acount/{id}")
     public ResponseEntity<?> findByID(@PathVariable("id") Integer id) {
         Acount acount = AcountDAO.findById_User(id);
         if (acount == null) {

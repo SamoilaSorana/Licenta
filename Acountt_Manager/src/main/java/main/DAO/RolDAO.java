@@ -1,7 +1,7 @@
 package main.DAO;
 
-import main.Objects.Acount;
-import main.Objects.Rol;
+
+import Objects.Rol;
 import main.Sistem.DataBase;
 
 import java.sql.Connection;

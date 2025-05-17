@@ -1,20 +1,20 @@
 package main.DAO;
 
 
+import Objects.Answer;
 import Objects.AttemptInfo;
+import Objects.Chapter;
 import main.Sistem.DataBase;
 
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.SQLException;
-import java.sql.Statement;
+import java.sql.*;
+import java.util.ArrayList;
 import java.util.List;
 
 public class AttemptInfoDAO {
 
     public static boolean insert(AttemptInfo info) {
         Connection conn = DataBase.GetInfo();
-        String sql = "INSERT INTO attemp_info (attempt_id, question_id, answer_id) VALUES (?, ?, ?)";
+        String sql = "INSERT INTO attempt_info (attempt_id, question_id, answer_id) VALUES (?, ?, ?)";
 
         try {
             PreparedStatement stmt = conn.prepareStatement(sql);
@@ -35,7 +35,7 @@ public class AttemptInfoDAO {
 
     public static boolean insert(List<AttemptInfo> infoList) {
         Connection conn = DataBase.GetInfo();
-        String sql = "INSERT INTO attemp_info (attempt_id, question_id, answer_id) VALUES (?, ?, ?)";
+        String sql = "INSERT INTO attempt_info (attempt_id, question_id, answer_id) VALUES (?, ?, ?)";
 
         try {
             PreparedStatement stmt = conn.prepareStatement(sql);
@@ -62,4 +62,32 @@ public class AttemptInfoDAO {
             DataBase.closeConnection();
         }
     }
+
+
+    public static List<AttemptInfo> findByAttemptId(int id) {
+        List<AttemptInfo> infoList = new ArrayList<>();
+        String sql ="SELECT * FROM attempt_info WHERE attempt_id ='"+id+"'";
+        try (Connection conn = DataBase.GetInfo();
+             Statement stmt = conn.createStatement();
+             ResultSet rs = stmt.executeQuery(sql)) {
+            while (rs.next()) {
+                AttemptInfo attemptInfo = new AttemptInfo(
+                        rs.getInt("attempt_id"),
+                        rs.getInt("question_id"),
+                        rs.getInt("answer_id")
+
+                );
+                infoList.add(attemptInfo);
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        finally {
+            DataBase.closeConnection();
+        }
+        return infoList;
+    }
+
+
+
 }

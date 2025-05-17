@@ -1,6 +1,7 @@
 package main.DAO;
 
-import main.Objects.Permisiune;
+
+import Objects.Permisiune;
 import main.Sistem.DataBase;
 
 import java.sql.Connection;

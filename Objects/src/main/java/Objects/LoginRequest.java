@@ -1,4 +1,4 @@
-package main.Sistem;
+package Objects;
 
 public class LoginRequest {
     private String username;

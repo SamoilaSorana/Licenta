@@ -7,6 +7,8 @@ import Register from "./pages/register";
 import Lectures from "./pages/lectures";
 import LecturePage from "./pages/lecturePage";
 import TestPage from "./pages/testpage";
+import ProfilePage from "./pages/ProfilePage";
+import GradedTestsPage from "./pages/GradedTestsPage";
 
 
 
@@ -22,6 +24,8 @@ function App() {
             <Route path='/lectures' element={<Lectures/>}/>
             <Route path="/lecture/:id" element={<LecturePage />} />
             <Route path="/lecture/:id/test" element={<TestPage />} />
+            <Route path='/profile' element={<ProfilePage/>}/>
+            <Route path="/graded-tests" element={<GradedTestsPage />} />
 
 
         </Routes>

@@ -17,7 +17,7 @@ import java.util.stream.Collectors;
 
 public class LecturesLogic {
 
-    public static List<Lecture> GetAllLectures(int userID) {
+    public static List<Lecture> GetAllLectures() {
         List<Lecture> lectures = new ArrayList<>();
 
         try {
@@ -183,7 +183,7 @@ public class LecturesLogic {
     }
 
     public static List<Map<String,Object>> GetLectures(int userId) {
-        List<Lecture> lectures = GetAllLectures(userId);
+        List<Lecture> lectures = GetAllLectures();
         List<Completed> completedList = GetCompletedLectures(userId);
         List<RequiredLecture> requiredLectures = GetRequiredLectures();
 
@@ -199,7 +199,7 @@ public class LecturesLogic {
 
 
     public static List<Map<String,Object>> GetLecturesWithoutFilter(int userId) {
-        List<Lecture> lectures = GetAllLectures(userId);
+        List<Lecture> lectures = GetAllLectures();
 
         List<Chapter> chapters =GetAllChapters();
 
@@ -208,6 +208,20 @@ public class LecturesLogic {
         return groupedLectures;
     }
 
+
+    public static Map<String,Object> GetLectureCount(int userId) {
+        List<Lecture> lectures = GetAllLectures();
+        Map<String, Object> result = new HashMap<>();
+        List<Completed> completedList = GetCompletedLectures(userId);
+        int total = lectures.size();
+        int completed = completedList.size();
+
+
+        result.put("completed", completed);
+        result.put("total", total);
+
+        return result;
+    }
 
 
 

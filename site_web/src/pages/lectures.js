@@ -9,6 +9,8 @@ const Lectures = () => {
     const [chaptersWithLectures, setChaptersWithLectures] = useState([]);
     const [loading, setLoading] = useState(true);
     const [expandedChapters, setExpandedChapters] = useState(new Set());
+    const [progress, setProgress] = useState({ completed: 0, total: 0 });
+    const [animatedPercent, setAnimatedPercent] = useState(0);
     const navigate = useNavigate();
 
     const hasPermission = (perm) => permissions.includes(perm);
@@ -33,8 +35,7 @@ const Lectures = () => {
 
     useEffect(() => {
         if (hasPermission("VIEW_LECTURES")) {
-            axios.get("http://localhost:4000/logic/lecture/all" +
-                "", {
+            axios.get("http://localhost:4000/logic/lecture/all", {
                 headers: { Authorization: `Bearer ${Cookies.get("token")}` },
             })
                 .then((res) => {
@@ -43,8 +44,24 @@ const Lectures = () => {
                     setExpandedChapters(initialExpanded);
                 })
                 .catch((err) => console.log("Eroare:", err));
+
+            axios.get("http://localhost:4000/logic/lecture/count", {
+                headers: { Authorization: `Bearer ${Cookies.get("token")}` },
+            })
+                .then((res) => setProgress(res.data))
+                .catch((err) => console.error("Eroare progres:", err));
         }
     }, [permissions]);
+
+    useEffect(() => {
+        let i = 0;
+        const interval = setInterval(() => {
+            const target = progress.total > 0 ? (progress.completed / progress.total) * 100 : 0;
+            setAnimatedPercent(prev => prev >= target ? target : Math.min(prev + 1, target));
+            if (animatedPercent >= target) clearInterval(interval);
+        }, 30);
+        return () => clearInterval(interval);
+    }, [progress]);
 
     const handleStartLecture = (id) => navigate(`/lecture/${id}`);
 
@@ -73,6 +90,42 @@ const Lectures = () => {
                 paddingBottom: "60px"
             }}
         >
+            <div style={{
+                backgroundColor: "#fff",
+                borderRadius: "10px",
+                padding: "20px",
+                marginBottom: "40px",
+                boxShadow: "0 4px 12px rgba(0,0,0,0.1)"
+            }}>
+                <h2 style={{ marginBottom: "10px" }}>Progress: {progress.completed}/{progress.total} ({Math.round(animatedPercent)}%)</h2>
+                <div style={{
+                    width: "100%",
+                    height: "25px",
+                    backgroundColor: "#eee",
+                    borderRadius: "15px",
+                    overflow: "hidden",
+                    position: "relative",
+                    border: "1px solid #ccc"
+                }}>
+                    <div style={{
+                        width: `${animatedPercent}%`,
+                        height: "100%",
+                        backgroundImage: "linear-gradient(135deg, #64b5f6 25%, #1e88e5 25%, #1e88e5 50%, #64b5f6 50%, #64b5f6 75%, #1e88e5 75%, #1e88e5)",
+                        backgroundSize: "40px 40px",
+                        animation: "movePattern 2s linear infinite"
+                    }} />
+                </div>
+            </div>
+
+            <style>
+                {`
+                @keyframes movePattern {
+                    0% { background-position: 0 0; }
+                    100% { background-position: 40px 0; }
+                }
+                `}
+            </style>
+
             {chaptersWithLectures.map(({ chapter, lectures }) => {
                 const isExpanded = expandedChapters.has(chapter.id);
                 return (

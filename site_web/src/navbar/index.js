@@ -10,12 +10,12 @@ function Navbar() {
     const toggleDropdown = () => setIsDropdownOpen(!isDropdownOpen);
 
     const logOut = () => {
-        Cookies.remove('googleID');
-        Cookies.remove('user_id');
+
+        Cookies.remove('token');
         window.location.href = '/';
     };
 
-    const userLoggedIn = Cookies.get('user_id');
+    const userLoggedIn = Cookies.get('token');
 
     return (
         <nav className="navbar navbar-expand-lg navbar-dark custom-navbar">
@@ -31,9 +31,6 @@ function Navbar() {
                             <a className="nav-link" href="/lectures">Lectures</a>
                         </li>
                         <li className="nav-item">
-                            <a className="nav-link" href="/donations">Donations</a>
-                        </li>
-                        <li className="nav-item">
                             <a className="nav-link" href="/contact">Contact</a>
                         </li>
                     </ul>
@@ -46,7 +43,14 @@ function Navbar() {
                                 </button>
                                 {isDropdownOpen && (
                                     <ul className="dropdown-menu dropdown-menu-end show profile-dropdown">
-                                        <li><button className="dropdown-item" onClick={logOut}>Log Out</button></li>
+                                        <li>
+                                            <button className="dropdown-item" onClick={logOut}>Log Out</button>
+                                        </li>
+                                        <li>
+                                            <button className="dropdown-item"
+                                                    onClick={() => window.location.href = "/profile"}>Profile
+                                            </button>
+                                        </li>
                                     </ul>
                                 )}
                             </li>
