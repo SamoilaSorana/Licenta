@@ -1,9 +1,10 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import imagess from '../images/imagess.png';
 import "./style.css";
 import { useWindowSize } from "./useWindowSize";
+import Cookies from "js-cookie";
 
 const Register = () => {
     const [width, height] = useWindowSize();
@@ -14,7 +15,17 @@ const Register = () => {
     const [email, setEmail] = useState("");
     const [nume, setNume] = useState("");
     const [prenume, setPrenume] = useState("");
-    const [role, setRole] = useState("user");
+
+    useEffect(() => {
+        const token = Cookies.get("token");
+        if (token) {
+            axios.get("http://localhost:4000/idm/api/auth/check-token", {
+                headers: { Authorization: `Bearer ${token}` }
+            })
+                .then(() => navigate("/"))
+                .catch(() => {}); // token invalid -> rămâne pe pagină
+        }
+    }, [navigate]);
 
     const handleSubmit = async (e) => {
         e.preventDefault();
@@ -24,8 +35,7 @@ const Register = () => {
                 parola: password,
                 email,
                 nume,
-                prenume,
-                rolInput: role
+                prenume
             });
 
             if (response.status === 201) {
@@ -48,7 +58,6 @@ const Register = () => {
             overflow: "hidden",
             backgroundColor: "#0f172a"
         }}>
-            {/* Imaginea full screen */}
             <img
                 src={imagess}
                 alt="background"
@@ -64,7 +73,6 @@ const Register = () => {
                 }}
             />
 
-            {/* Form pe dreapta */}
             <div
                 style={{
                     position: "relative",
@@ -76,7 +84,6 @@ const Register = () => {
                     alignItems: "center",
                     paddingRight: "33%",
                     marginTop: "80px",
-
                 }}
             >
                 <div
@@ -115,19 +122,6 @@ const Register = () => {
                                 <label>{field.label}</label>
                             </div>
                         ))}
-
-                        <div className="form-floating mb-4">
-                            <select
-                                className="form-control"
-                                value={role}
-                                onChange={(e) => setRole(e.target.value)}
-                            >
-                                <option value="user">Elev</option>
-                                <option value="profesor">Profesor</option>
-                                <option value="admin">Admin</option>
-                            </select>
-                            <label>Rol</label>
-                        </div>
 
                         <div className="d-grid">
                             <button type="submit" className="btn btn-primary">

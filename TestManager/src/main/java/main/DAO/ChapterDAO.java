@@ -23,9 +23,7 @@ public class ChapterDAO {
         } catch (SQLException e) {
             e.printStackTrace();
         }
-        finally {
-            DataBase.closeConnection();
-        }
+
         return null;
     }
 
@@ -33,9 +31,11 @@ public class ChapterDAO {
     public static List<Chapter> findAll() {
         List<Chapter> chapters = new ArrayList<>();
         String sql = "SELECT C.chapter_id, C.name, G.name AS grade, S.name AS subject FROM chapters  C JOIN grades G ON C.grade_id = G.grade_id JOIN subjects S ON C.subject_id = S.subject_id ";
-        Connection conn = DataBase.GetInfo();
 
-        try (Statement stmt = conn.createStatement();
+
+        try (Connection conn = DataBase.GetInfo();
+
+            Statement stmt = conn.createStatement();
              ResultSet rs = stmt.executeQuery(sql)) {
 
             while (rs.next()) {
@@ -47,9 +47,7 @@ public class ChapterDAO {
         } catch (SQLException e) {
             e.printStackTrace();
         }
-        finally {
-            DataBase.closeConnection();
-        }
+
         return chapters;
     }
 }

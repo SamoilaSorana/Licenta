@@ -11,10 +11,11 @@ import java.util.*;
 public class QuestionDAO {
     public static List<Question> findAll() {
         List<Question> list = new ArrayList<>();
-        Connection conn = DataBase.GetInfo();
         String sql = "SELECT * FROM questions";
 
-        try (Statement stmt = conn.createStatement();
+        try (Connection conn = DataBase.GetInfo();
+
+            Statement stmt = conn.createStatement();
              ResultSet rs = stmt.executeQuery(sql)) {
 
             while (rs.next()) {
@@ -28,9 +29,7 @@ public class QuestionDAO {
         } catch (SQLException e) {
             e.printStackTrace();
         }
-        finally {
-            DataBase.closeConnection();
-        }
+
 
         return list;
     }
@@ -52,10 +51,12 @@ public class QuestionDAO {
 
     public static List<Question> findbylectureId(int lectureId) {
         List<Question> list = new ArrayList<>();
-        Connection conn = DataBase.GetInfo();
+
         String sql = "SELECT Q.question_id, Q.text FROM questions Q  JOIN questions_for_lecture QL ON Q.question_id = QL.question_id WHERE QL.lecture_id='"+lectureId+"'";
 
-        try (Statement stmt = conn.createStatement();
+        try (Connection conn = DataBase.GetInfo();
+
+            Statement stmt = conn.createStatement();
              ResultSet rs = stmt.executeQuery(sql)) {
 
             while (rs.next()) {
@@ -70,9 +71,7 @@ public class QuestionDAO {
         } catch (SQLException e) {
             e.printStackTrace();
         }
-        finally {
-            DataBase.closeConnection();
-        }
+
 
         return list;
     }
@@ -81,10 +80,12 @@ public class QuestionDAO {
 
 
     public static boolean insert(Question question) {
-        Connection conn = DataBase.GetInfo();
+
         String sql = "INSERT INTO questions (text) VALUES (?)";
 
-        try (PreparedStatement stmt = conn.prepareStatement(sql)) {
+        try (Connection conn = DataBase.GetInfo();
+
+            PreparedStatement stmt = conn.prepareStatement(sql)) {
             stmt.setString(1, question.getText());
             stmt.executeUpdate();
             return true;
@@ -92,16 +93,16 @@ public class QuestionDAO {
             e.printStackTrace();
             return false;
         }
-        finally {
-            DataBase.closeConnection();
-        }
+
     }
 
     public static Question findLast() {
-        Connection conn = DataBase.GetInfo();
+
         String sql = "SELECT * FROM questions ORDER BY question_id DESC LIMIT 1";
 
-        try (Statement stmt = conn.createStatement();
+        try (Connection conn = DataBase.GetInfo();
+
+            Statement stmt = conn.createStatement();
              ResultSet rs = stmt.executeQuery(sql)) {
             if (rs.next()) {
                 return new Question(rs.getInt("question_id"), rs.getString("text"));
@@ -109,9 +110,7 @@ public class QuestionDAO {
         } catch (SQLException e) {
             e.printStackTrace();
         }
-        finally {
-            DataBase.closeConnection();
-        }
+
 
         return null;
     }

@@ -4,9 +4,7 @@ package main.DAO;
 import Objects.QuestionForLecture;
 import main.Sistem.DataBase;
 
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.SQLException;
+import java.sql.*;
 import java.util.ArrayList;
 
 public class QuestionForLectureDAO {
@@ -23,17 +21,16 @@ public class QuestionForLectureDAO {
         } catch (SQLException e) {
             e.printStackTrace();
         }
-        finally {
-            DataBase.closeConnection();
-        }
+
         return false;
     }
 
     public static ArrayList<QuestionForLecture> findAll() {
         ArrayList<QuestionForLecture> list = new ArrayList<>();
-        try (var conn = DataBase.GetInfo();
-             var stmt = conn.prepareStatement("SELECT * FROM questions_for_lecture");
-             var rs = stmt.executeQuery()) {
+        try (
+                Connection conn = DataBase.GetInfo();
+                PreparedStatement stmt = conn.prepareStatement("SELECT * FROM questions_for_lecture");
+                ResultSet rs = stmt.executeQuery()) {
 
             while (rs.next()) {
                 list.add(new QuestionForLecture(
@@ -45,9 +42,7 @@ public class QuestionForLectureDAO {
         } catch (SQLException e) {
             e.printStackTrace();
         }
-        finally {
-            DataBase.closeConnection();
-        }
+
         return list;
     }
 }

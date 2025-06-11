@@ -1,35 +1,104 @@
+/* Navbar general */
 .custom-navbar {
     background-color: #0f172a;
     padding: 0.75rem 1.5rem;
 }
 
+/* Brand */
 .navbar-brand {
     font-weight: bold;
     font-size: 1.5rem;
     color: #fff;
-}
-
-.navbar-nav .nav-link {
-    color: #e2e8f0;
-    margin-right: 1rem;
-    font-weight: 500;
     transition: color 0.3s;
 }
 
-.navbar-nav .nav-link:hover {
-    color: #61dafb;
+.navbar-brand:hover {
+    color: #38bdf8;
 }
+
+/* Linkuri din meniu */
+.navbar-nav .nav-link {
+    position: relative;
+    color: #e2e8f0;
+    margin-right: 1rem;
+    font-weight: 500;
+    transition: color 0.3s ease;
+    padding-bottom: 4px;
+}
+
+.navbar-nav .nav-link::after {
+    content: "";
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 0%;
+    height: 2px;
+    background: linear-gradient(to right, #60a5fa, #38bdf8);
+    transition: width 0.3s ease;
+}
+
+.navbar-nav .nav-link:hover {
+    color: #60a5fa;
+}
+
+.navbar-nav .nav-link:hover::after {
+    width: 100%;
+}
+
+/* Iconițe */
 
 .nav-profile-icon {
     background: none;
     border: none;
-    color: white;
     cursor: pointer;
+    padding: 0.3rem;
+    display: flex;
+    align-items: center;
 }
 
+.nav-icon {
+    color: #f8fafc;
+    font-size: 1.8rem;
+    transition: transform 0.2s ease, color 0.3s ease;
+}
+
+.nav-icon:hover {
+    transform: scale(1.2);
+    color: #61dafb;
+}
+/* Dropdown meniu profil */
 .profile-dropdown {
     background: white;
     margin-top: 8px;
     border-radius: 8px;
-    box-shadow: 0px 4px 10px rgba(0,0,0,0.1);
+    box-shadow: 0px 4px 12px rgba(0, 0, 0, 0.1);
+    overflow: hidden;
+}
+
+.profile-dropdown .dropdown-item {
+    padding: 10px 15px;
+    color: #333;
+    transition: background 0.2s, color 0.2s;
+}
+
+.profile-dropdown .dropdown-item:hover {
+    background-color: #f1f5f9;
+    color: #1e40af;
+}
+
+/* Divider */
+.dropdown-divider {
+    margin: 4px 0;
+    border-color: #e2e8f0;
+}
+
+/* Text muted pt. notificări */
+.text-muted {
+    color: #6b7280 !important;
+}
+
+/* Text primary pt. linkuri speciale */
+.text-primary {
+    color: #2563eb !important;
+    font-weight: 500;
 }

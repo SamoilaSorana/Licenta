@@ -21,22 +21,35 @@ const Lectures = () => {
             axios.get("http://localhost:4000/idm/api/auth/check-token", {
                 headers: { Authorization: `Bearer ${token}` },
             })
-                .then((res) => setPermissions(res.data.permisiuni))
+                .then((res) => {
+                    const perms = res.data.permisiuni;
+                    setPermissions(perms);
+                    if (!perms.includes("VIEW_LECTURES")) {
+                        navigate("/not-authorized");
+                    }
+                })
                 .catch(() => {
                     Cookies.remove("token");
                     setPermissions([]);
+                    navigate("/login");
                 })
                 .finally(() => setLoading(false));
         } else {
             setPermissions([]);
             setLoading(false);
+            navigate("/login");
         }
     }, []);
 
     useEffect(() => {
         if (hasPermission("VIEW_LECTURES")) {
-            axios.get("http://localhost:4000/logic/lecture/all", {
-                headers: { Authorization: `Bearer ${Cookies.get("token")}` },
+            const token = Cookies.get("token");
+            const endpoint = hasPermission("SEE_UNFILTERED_LECTURES")
+                ? "http://localhost:4000/logic/lecture/all_unfiltered"
+                : "http://localhost:4000/logic/lecture/all";
+
+            axios.get(endpoint, {
+                headers: { Authorization: `Bearer ${token}` },
             })
                 .then((res) => {
                     setChaptersWithLectures(res.data);
@@ -46,7 +59,7 @@ const Lectures = () => {
                 .catch((err) => console.log("Eroare:", err));
 
             axios.get("http://localhost:4000/logic/lecture/count", {
-                headers: { Authorization: `Bearer ${Cookies.get("token")}` },
+                headers: { Authorization: `Bearer ${token}` },
             })
                 .then((res) => setProgress(res.data))
                 .catch((err) => console.error("Eroare progres:", err));
@@ -74,7 +87,6 @@ const Lectures = () => {
     };
 
     if (loading) return <h2>Se încarcă...</h2>;
-    if (!hasPermission("VIEW_LECTURES")) return <h2>Nu ai permisiunea să vezi lecțiile.</h2>;
 
     return (
         <div
@@ -171,35 +183,46 @@ const Lectures = () => {
                                         boxShadow: "0 8px 15px rgba(0,0,0,0.1)",
                                         backdropFilter: "blur(4px)",
                                         transition: "transform 0.2s",
+                                        display: "flex",
+                                        flexDirection: "column",
+                                        justifyContent: "space-between",
+                                        minHeight: "320px" // înălțime uniformă
                                     }}
                                          onMouseEnter={(e) => e.currentTarget.style.transform = "scale(1.03)"}
                                          onMouseLeave={(e) => e.currentTarget.style.transform = "scale(1.0)"}
                                     >
-                                        <h2 style={{ fontSize: "22px", color: "#222" }}>{lecture.titlu}</h2>
-                                        <p><strong>Dificultate:</strong> {lecture.dificultate}</p>
-                                        <p style={{ marginTop: "10px", color: "#444" }}>
-                                            {lecture.rezumat || "Această lecție te va ajuta să înțelegi mai bine conceptele matematice."}
-                                        </p>
-                                        <button
-                                            onClick={() => handleStartLecture(lecture.lectureId)}
-                                            style={{
-                                                marginTop: "20px",
-                                                backgroundColor: "#1976d2",
-                                                color: "#fff",
-                                                border: "none",
-                                                padding: "10px 25px",
-                                                borderRadius: "8px",
-                                                fontSize: "16px",
-                                                cursor: "pointer",
-                                                transition: "background-color 0.3s"
-                                            }}
-                                            onMouseOver={(e) => e.target.style.backgroundColor = "#0d47a1"}
-                                            onMouseOut={(e) => e.target.style.backgroundColor = "#1976d2"}
-                                        >
-                                            Începe lecția
-                                        </button>
+                                        <div>
+                                            <h2 style={{ fontSize: "22px", color: "#222" }}>{lecture.titlu}</h2>
+                                            <p><strong>Dificultate:</strong> {lecture.dificultate}</p>
+                                            <p style={{ marginTop: "10px", color: "#444", flexGrow: 1 }}>
+                                                {(lecture.rezumat && lecture.rezumat.replace(/<[^>]*>?/gm, '').slice(0, 100) + '...') ||
+                                                    "Această lecție te va ajuta să înțelegi mai bine conceptele matematice."}
+                                            </p>
+                                        </div>
+
+                                        <div style={{ marginTop: "auto" }}>
+                                            <button
+                                                onClick={() => handleStartLecture(lecture.lectureId)}
+                                                style={{
+                                                    marginTop: "20px",
+                                                    backgroundColor: "#1976d2",
+                                                    color: "#fff",
+                                                    border: "none",
+                                                    padding: "10px 25px",
+                                                    borderRadius: "8px",
+                                                    fontSize: "16px",
+                                                    cursor: "pointer",
+                                                    transition: "background-color 0.3s"
+                                                }}
+                                                onMouseOver={(e) => e.target.style.backgroundColor = "#0d47a1"}
+                                                onMouseOut={(e) => e.target.style.backgroundColor = "#1976d2"}
+                                            >
+                                                Începe lecția
+                                            </button>
+                                        </div>
                                     </div>
                                 ))}
+
                             </div>
                         </div>
                     </div>

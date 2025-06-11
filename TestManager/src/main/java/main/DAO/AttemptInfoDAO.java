@@ -13,10 +13,11 @@ import java.util.List;
 public class AttemptInfoDAO {
 
     public static boolean insert(AttemptInfo info) {
-        Connection conn = DataBase.GetInfo();
+
         String sql = "INSERT INTO attempt_info (attempt_id, question_id, answer_id) VALUES (?, ?, ?)";
 
-        try {
+        try (Connection conn = DataBase.GetInfo()) {
+
             PreparedStatement stmt = conn.prepareStatement(sql);
             stmt.setInt(1, info.getAttemptId());
             stmt.setInt(2, info.getQuestionId());
@@ -28,16 +29,16 @@ public class AttemptInfoDAO {
         } catch (SQLException e) {
             e.printStackTrace();
             return false;
-        } finally {
-            DataBase.closeConnection();
+
         }
     }
 
     public static boolean insert(List<AttemptInfo> infoList) {
-        Connection conn = DataBase.GetInfo();
+
         String sql = "INSERT INTO attempt_info (attempt_id, question_id, answer_id) VALUES (?, ?, ?)";
 
-        try {
+        try (Connection conn = DataBase.GetInfo()) {
+
             PreparedStatement stmt = conn.prepareStatement(sql);
 
             for (AttemptInfo info : infoList) {
@@ -58,8 +59,7 @@ public class AttemptInfoDAO {
         } catch (SQLException e) {
             e.printStackTrace();
             return false;
-        } finally {
-            DataBase.closeConnection();
+
         }
     }
 
@@ -82,9 +82,7 @@ public class AttemptInfoDAO {
         } catch (SQLException e) {
             e.printStackTrace();
         }
-        finally {
-            DataBase.closeConnection();
-        }
+
         return infoList;
     }
 

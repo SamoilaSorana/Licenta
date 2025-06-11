@@ -20,9 +20,7 @@ public class AnswerDAO {
             e.printStackTrace();
             return false;
         }
-        finally {
-            DataBase.closeConnection();
-        }
+
     }
 
     public static List<Answer> findAll() {
@@ -41,9 +39,7 @@ public class AnswerDAO {
         } catch (SQLException e) {
             e.printStackTrace();
         }
-        finally {
-            DataBase.closeConnection();
-        }
+
         return answers;
     }
 
@@ -64,9 +60,7 @@ public class AnswerDAO {
         } catch (SQLException e) {
             e.printStackTrace();
         }
-        finally {
-            DataBase.closeConnection();
-        }
+
         return answers;
     }
 
@@ -84,9 +78,7 @@ public class AnswerDAO {
         } catch (SQLException e) {
             e.printStackTrace();
         }
-        finally {
-            DataBase.closeConnection();
-        }
+
         return null;
     }
 }

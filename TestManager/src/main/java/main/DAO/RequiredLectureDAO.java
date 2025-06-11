@@ -13,8 +13,8 @@ import java.util.ArrayList;
 public class RequiredLectureDAO {
 
     public static boolean insert(RequiredLecture rl) {
-        Connection conn = DataBase.GetInfo();
-        try {
+
+        try (Connection conn = DataBase.GetInfo()){
             PreparedStatement ps = conn.prepareStatement(
                     "INSERT INTO required_lecture (current_lecture_id, required_lecture_id) VALUES (?, ?)"
             );
@@ -25,16 +25,13 @@ public class RequiredLectureDAO {
         } catch (SQLException e) {
             e.printStackTrace();
         }
-        finally {
-            DataBase.closeConnection();
-        }
+
         return false;
     }
 
     public static ArrayList<RequiredLecture> findAll() {
         ArrayList<RequiredLecture> list = new ArrayList<>();
-        try {
-            Connection conn = DataBase.GetInfo();
+        try (Connection conn = DataBase.GetInfo()){
             PreparedStatement ps = conn.prepareStatement("SELECT * FROM required_lecture");
             ResultSet rs = ps.executeQuery();
 
@@ -49,15 +46,12 @@ public class RequiredLectureDAO {
         } catch (SQLException e) {
             e.printStackTrace();
         }
-        finally {
-            DataBase.closeConnection();
-        }
+
         return list;
     }
 
     public static boolean delete(int currentLectureId, int requiredLectureId) {
-        try {
-            Connection conn = DataBase.GetInfo();
+        try (Connection conn = DataBase.GetInfo()){
             PreparedStatement ps = conn.prepareStatement(
                     "DELETE FROM required_lecture WHERE current_lecture_id = ? AND required_lecture_id = ?"
             );
@@ -68,15 +62,12 @@ public class RequiredLectureDAO {
         } catch (SQLException e) {
             e.printStackTrace();
         }
-        finally {
-            DataBase.closeConnection();
-        }
+
         return false;
     }
 
     public static boolean update(int currentLectureId, int requiredLectureId, RequiredLecture newValues) {
-        try {
-            Connection conn = DataBase.GetInfo();
+        try (Connection conn = DataBase.GetInfo()){
             PreparedStatement ps = conn.prepareStatement(
                     "UPDATE required_lecture SET current_lecture_id = ?, required_lecture_id = ? " +
                             "WHERE current_lecture_id = ? AND required_lecture_id = ?"
@@ -91,9 +82,7 @@ public class RequiredLectureDAO {
         } catch (SQLException e) {
             e.printStackTrace();
         }
-        finally {
-            DataBase.closeConnection();
-        }
+
         return false;
     }
 }

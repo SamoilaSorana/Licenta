@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import Cookies from "js-cookie";
 import axios from "axios";
+import './style.css'; // ✅ Asigură-te că ai importat stilul
 
 const LecturePage = () => {
     const { id } = useParams(); // lectureId din URL
@@ -31,44 +32,37 @@ const LecturePage = () => {
         }
     }, [id, navigate]);
 
+    const formatContent = (text) => {
+        if (!text) return "";
+
+        // Dacă nu conține HTML, transformă fiecare linie într-un paragraf
+        if (!text.includes("<") && !text.includes("</")) {
+            return text
+                .split("\n")
+                .map(line => `<p>${line.trim()}</p>`)
+                .join("");
+        }
+
+        // Dacă e deja HTML, returnează direct
+        return text;
+    };
+
     if (loading) {
-        return <h2>Se încarcă lecția...</h2>;
+        return <h2 style={{ textAlign: "center" }}>Se încarcă lecția...</h2>;
     }
 
     if (!lecture) {
-        return <h2>Lecția nu a fost găsită.</h2>;
+        return <h2 style={{ textAlign: "center", color: "red" }}>Lecția nu a fost găsită.</h2>;
     }
 
     const styles = {
-        page: {
-            padding: "20px",
-            maxWidth: "800px",
-            margin: "0 auto",
-            backgroundColor: "#f9f9f9",
-            border: "1px solid #ddd",
-            borderRadius: "12px",
-            boxShadow: "0 2px 8px rgba(0, 0, 0, 0.1)",
-        },
-        title: {
-            fontSize: "28px",
-            marginBottom: "10px",
-        },
-        subtitle: {
-            fontSize: "20px",
-            marginBottom: "10px",
-            color: "#555",
-        },
-        content: {
-            fontSize: "18px",
-            lineHeight: "1.6",
-        },
         button: {
             marginTop: "20px",
-            padding: "10px 20px",
-            backgroundColor: "#4CAF50",
+            padding: "12px 24px",
+            backgroundColor: "#1e3799",
             color: "white",
             border: "none",
-            borderRadius: "8px",
+            borderRadius: "10px",
             fontSize: "16px",
             cursor: "pointer",
             transition: "background-color 0.3s ease",
@@ -81,33 +75,44 @@ const LecturePage = () => {
     };
 
     return (
-        <div style={styles.page}>
-            <h1 style={styles.title}>{lecture.titlu}</h1>
-            <h3 style={styles.subtitle}>Dificultate: {lecture.dificultate}</h3>
-            <h3 style={styles.subtitle}>Rezumat:</h3>
-            <p style={styles.content}>{lecture.rezumat}</p>
-            <h3 style={styles.subtitle}>Conținut detaliat:</h3>
-            <p style={styles.content}>{lecture.continut}</p>
+        <div className="lecture-wrapper">
+            <div className="lecture-card">
+                <h1 className="lecture-title">{lecture.titlu}</h1>
 
-            {/* Butoane */}
-            <div>
-                <button
-                    style={styles.button}
-                    onClick={() => navigate("/lectures")}
-                    onMouseOver={(e) => e.target.style.backgroundColor = "#45a049"}
-                    onMouseOut={(e) => e.target.style.backgroundColor = "#4CAF50"}
-                >
-                    Înapoi la Lecții
-                </button>
+                <div className="lecture-label">Dificultate:</div>
+                <p className="lecture-text">{lecture.dificultate}</p>
 
-                <button
-                    style={styles.button}
-                    onClick={handleStartTest}
-                    onMouseOver={(e) => e.target.style.backgroundColor = "#45a049"}
-                    onMouseOut={(e) => e.target.style.backgroundColor = "#4CAF50"}
-                >
-                    Începe Testul
-                </button>
+                <h3 style={styles.subtitle}>Rezumat:</h3>
+                <div style={styles.content} dangerouslySetInnerHTML={{ __html: lecture.rezumat }}></div>
+
+
+                <div className="lecture-label">Conținut detaliat:</div>
+                <div
+                    className="lecture-content-html"
+                    dangerouslySetInnerHTML={{ __html: formatContent(lecture.continut) }}
+                ></div>
+
+                <div className="lecture-buttons">
+                    <button
+                        className="lecture-button"
+                        style={styles.button}
+                        onClick={() => navigate("/lectures")}
+                        onMouseOver={(e) => e.target.style.backgroundColor = "#0c2461"}
+                        onMouseOut={(e) => e.target.style.backgroundColor = "#1e3799"}
+                    >
+                        Înapoi la Lecții
+                    </button>
+
+                    <button
+                        className="lecture-button"
+                        style={styles.button}
+                        onClick={handleStartTest}
+                        onMouseOver={(e) => e.target.style.backgroundColor = "#0c2461"}
+                        onMouseOut={(e) => e.target.style.backgroundColor = "#1e3799"}
+                    >
+                        Începe Testul
+                    </button>
+                </div>
             </div>
         </div>
     );

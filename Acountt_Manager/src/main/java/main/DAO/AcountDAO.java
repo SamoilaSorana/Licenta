@@ -69,6 +69,27 @@ public class AcountDAO {
         return acount;
     }
 
+    public static String findUserName(int ID) {
+        String name ="";
+        Connection conn = DataBase.GetInfo();
+        String sql = "SELECT Nume,Prenume FROM conturi where ID= '" + ID + "'";
+        try {
+            Statement stm = conn.createStatement();
+            try (ResultSet rs = stm.executeQuery(sql)) {
+                if (rs.next()) {
+                    name = "\""+ rs.getString("Nume") + " " + rs.getString("Prenume")+"\"";
+                }
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        finally {
+            DataBase.closeConnection();
+        }
+
+        return name;
+    }
+
     public static Acount findByUsername(String username) {
         Acount acount = null;
         Connection conn = DataBase.GetInfo();

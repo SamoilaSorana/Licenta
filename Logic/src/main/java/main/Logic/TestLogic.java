@@ -14,6 +14,10 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
+import com.fasterxml.jackson.databind.SerializationFeature;
+import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
+
+
 public class TestLogic {
     public static List<Question> GetAllQuestion(int lectureID) {
         List<Question> questions = new ArrayList<>();
@@ -54,7 +58,7 @@ public class TestLogic {
     }
 
     public static double EvaluateTest(int lectureID, List<AnswerFromClient> answers) {
-        List<Question> test = GetAllQuestion(lectureID); // înlocuiește cu service/repository real
+        List<Question> test = GetAllQuestion(lectureID);
 
         double totalScore = 0.0;
 
@@ -129,6 +133,58 @@ public class TestLogic {
         return -1; // eroare
     }
 
+
+    public static int Getcount(int user_id,int lecture_id) {
+       int count =0;
+
+        try {
+            HttpClient client = HttpClient.newHttpClient();
+            HttpRequest request = HttpRequest.newBuilder()
+                    .uri(new URI("http://localhost:4000/test/attempt/count/"+user_id+"/"+lecture_id))
+                    .GET()
+                    .build();
+
+            HttpResponse<String> response = client.send(request, HttpResponse.BodyHandlers.ofString());
+            String json = response.body();
+            count = Integer.parseInt(json.trim());
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        return count;
+    }
+
+
+    public static int sendHelp(Help help) {
+        try {
+            HttpClient client = HttpClient.newHttpClient();
+
+            ObjectMapper mapper = new ObjectMapper();
+            mapper.registerModule(new JavaTimeModule());
+            mapper.disable(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS);
+
+            String body = mapper.writeValueAsString(help);
+
+            HttpRequest request = HttpRequest.newBuilder()
+                    .uri(new URI("http://localhost:4000/test/help"))
+                    .header("Content-Type", "application/json")
+                    .POST(HttpRequest.BodyPublishers.ofString(body))
+                    .build();
+
+            HttpResponse<String> response = client.send(request, HttpResponse.BodyHandlers.ofString());
+
+            // ✅ Returnează 1 dacă a fost creat cu succes
+            if (response.statusCode() == 200 || response.statusCode() == 201) {
+                return 1;
+            } else {
+                System.out.println("❌ Help creation failed. Status: " + response.statusCode());
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        return -1; // eroare
+    }
 
 
     public static int sendAttempt(Attempt attempt) {

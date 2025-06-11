@@ -1,9 +1,7 @@
 package main.Controllers;
 
-import Objects.AnswerFromClient;
-import Objects.Attempt;
-import Objects.AttemptAnswers;
-import Objects.AttemptInfo;
+import Objects.*;
+import main.DAO.AnswerDAO;
 import main.DAO.AttemptDAO;
 
 import main.DAO.AttemptInfoDAO;
@@ -32,6 +30,12 @@ public class AttemptController {
     public ResponseEntity<List<Attempt>> getAll() {
         return new ResponseEntity<>(AttemptDAO.findAll(), HttpStatus.OK);
 
+    }
+    @GetMapping("/attempt/count/{user_id}/{lecture_id}")
+    public ResponseEntity<?> getById(@PathVariable int user_id,@PathVariable int lecture_id) {
+        int count = AttemptDAO.findcount(user_id,lecture_id);
+
+        return new ResponseEntity<>(count, HttpStatus.OK);
     }
 
     @GetMapping("/attempt/{attemptId}/answers")
@@ -91,4 +95,6 @@ public class AttemptController {
 
         return ResponseEntity.ok(result);
     }
+
+
 }

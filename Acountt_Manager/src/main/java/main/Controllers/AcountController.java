@@ -13,6 +13,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 import java.util.List;
+import java.util.Objects;
 
 @RestController
 @CrossOrigin(origins = "*")
@@ -55,6 +56,14 @@ public class AcountController {
         return new ResponseEntity<>(acount, HttpStatus.OK); // Returnăm contul găsit
     }
 
+    @GetMapping("/user/acount/name/{id}")
+    public ResponseEntity<?> findUserName(@PathVariable("id") Integer id) {
+        String name = AcountDAO.findUserName(id);
+        if (Objects.equals(name, "")) {
+            return new ResponseEntity<>(null, HttpStatus.NOT_FOUND);
+        }
+        return new ResponseEntity<>(name, HttpStatus.OK); // Returnăm contul găsit
+    }
 
 
     public boolean authenticate(String username, String rawPassword) {
@@ -72,7 +81,7 @@ public class AcountController {
         System.out.println("🚀 Primit cont nou: " + acount);
 
         // Conversie din String în obiect Rol
-        Rol rol = RolDAO.findByNume(acount.getRolInput());
+        Rol rol = RolDAO.findByNume("User");
         if (rol == null) {
             return ResponseEntity.badRequest().body("Rol invalid!");
         }
@@ -89,5 +98,7 @@ public class AcountController {
 
         return new ResponseEntity<>(null, HttpStatus.UNPROCESSABLE_ENTITY);
     }
+
+
 
 }

@@ -12,8 +12,8 @@ public class AttemptDAO {
         String sql = "INSERT INTO attempts(user_id, lecture_id) VALUES (?, ?)";
         int generatedId = -1;
 
-        try {
-            PreparedStatement statement = DataBase.GetInfo().prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);
+        try (Connection conn = DataBase.GetInfo()){
+            PreparedStatement statement =conn.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);
             statement.setInt(1, attempt.getUserId());
             statement.setInt(2, attempt.getLectureId());
             statement.executeUpdate();
@@ -24,8 +24,6 @@ public class AttemptDAO {
             }
         } catch (SQLException e) {
             e.printStackTrace();
-        } finally {
-            DataBase.closeConnection();
         }
 
         return generatedId;
@@ -33,8 +31,9 @@ public class AttemptDAO {
     public static List<Attempt> findAll() {
         List<Attempt> list = new ArrayList<>();
         String sql = "SELECT * FROM attempts";
-        try {
-            Statement statement = DataBase.GetInfo().createStatement();
+        try (Connection conn = DataBase.GetInfo()){
+
+            Statement statement = conn.createStatement();
             ResultSet rs = statement.executeQuery(sql);
             while (rs.next()) {
                 Attempt a = new Attempt(
@@ -47,17 +46,36 @@ public class AttemptDAO {
         } catch (SQLException e) {
             e.printStackTrace();
         }
-        finally {
-            DataBase.closeConnection();
-        }
+
         return list;
+    }
+
+
+
+
+    public static int findcount(int userId, int lectureId) {
+      int count = 0;
+        String sql = "SELECT COUNT(*) AS cnt FROM attempts WHERE user_id='"+userId+"' AND lecture_id='"+lectureId+"'";
+        try (Connection conn = DataBase.GetInfo()){
+
+            Statement statement = conn.createStatement();
+            ResultSet rs = statement.executeQuery(sql);
+            if (rs.next()) {
+                        count=rs.getInt("cnt");
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        return count;
     }
 
     public static List<Attempt> findAllbyUserId(int userId) {
         List<Attempt> list = new ArrayList<>();
         String sql = "SELECT * FROM attempts WHERE user_id = '" + userId + "'";
-        try {
-            Statement statement = DataBase.GetInfo().createStatement();
+        try (Connection conn = DataBase.GetInfo()){
+
+            Statement statement = conn.createStatement();
             ResultSet rs = statement.executeQuery(sql);
             while (rs.next()) {
                 Attempt a = new Attempt(
@@ -70,9 +88,7 @@ public class AttemptDAO {
         } catch (SQLException e) {
             e.printStackTrace();
         }
-        finally {
-            DataBase.closeConnection();
-        }
+
         return list;
     }
 

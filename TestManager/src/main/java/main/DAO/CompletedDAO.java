@@ -15,10 +15,11 @@ import java.util.List;
 public class CompletedDAO {
 
     public static boolean insert(Completed completed) {
-        Connection conn = DataBase.GetInfo();
+
         String sql = "INSERT INTO completed (user_id, lecture_id) VALUES (?, ?)";
 
-        try {
+        try (Connection conn = DataBase.GetInfo()){
+
             PreparedStatement stmt = conn.prepareStatement(sql);
             stmt.setInt(1, completed.getUserId());
             stmt.setInt(2, completed.getLectureId());
@@ -30,9 +31,7 @@ public class CompletedDAO {
             e.printStackTrace();
             return false;
         }
-        finally {
-            DataBase.closeConnection();
-        }
+
     }
 
     public static List<Completed> findById(int id) {
@@ -48,9 +47,7 @@ public class CompletedDAO {
         } catch (SQLException e) {
             e.printStackTrace();
         }
-        finally {
-            DataBase.closeConnection();
-        }
+
         return completedList;
     }
 }
