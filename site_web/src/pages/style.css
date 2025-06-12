@@ -356,3 +356,201 @@
         transform: translateY(0);
     }
 }
+.hero-section-with-bg {
+    background-image: url('../images/Despre.jpg');
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    position: relative;
+    height: 400px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: white;
+    text-align: center;
+    padding: 20px;
+    border-radius: 15px;
+    margin-bottom: 40px;
+}
+
+.hero-section-with-bg .overlay {
+    background-color: rgba(0, 0, 0, 0.5); /* întunecare fundal pentru contrast */
+    padding: 40px;
+    border-radius: 12px;
+    max-width: 800px;
+}
+
+.hero-section-with-bg .hero-title {
+    font-size: 36px;
+    margin-bottom: 15px;
+    color: white;
+}
+
+.hero-section-with-bg .hero-text {
+    font-size: 18px;
+    color: #f0f0f0;
+}
+.hero-section {
+    background: linear-gradient(to right, #0052D4, #6FB1FC);
+    color: white;
+    padding: 60px 20px;
+    text-align: center;
+    border-radius: 15px;
+    margin-bottom: 40px;
+}
+
+.hero-image {
+    max-width: 800px;
+    width: 100%;
+    margin-bottom: 20px;
+    border-radius: 10px;
+}
+
+.hero-title {
+    font-size: 36px;
+    margin-bottom: 15px;
+}
+
+.hero-text {
+    font-size: 18px;
+    max-width: 800px;
+    margin: 0 auto;
+}
+
+.vision-section {
+    text-align: center;
+    padding: 30px;
+    background-color: #f0f7ff;
+    margin-bottom: 40px;
+    border-radius: 12px;
+}
+
+.audience-section {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 30px;
+    margin-bottom: 50px;
+}
+
+.audience-section div {
+    background: #fff;
+    padding: 20px;
+    width: 280px;
+    border-radius: 12px;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+    text-align: center;
+}
+
+.features-section {
+    padding: 30px 20px;
+    background-color: #f9f9f9;
+    border-radius: 15px;
+}
+
+.features-section h2 {
+    text-align: center;
+    margin-bottom: 30px;
+}
+
+.feature-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+    gap: 20px;
+}
+
+.feature-grid div {
+    background: white;
+    padding: 20px;
+    border-radius: 12px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+    text-align: center;
+}
+
+/* === Contact / FAQ Accordion Style – Versiune colorată și modernă === */
+.faq-container {
+    max-width: 900px;
+    margin: 60px auto;
+    padding: 0 20px;
+    font-family: 'Segoe UI', sans-serif;
+}
+
+.faq-title {
+    text-align: center;
+    font-size: 34px;
+    font-weight: 800;
+    margin-bottom: 40px;
+    color: #0d47a1;
+    text-shadow: 1px 1px 0 #e3f2fd;
+}
+
+.faq-item {
+    background: linear-gradient(to right, #e3f2fd, #f9fbe7);
+    border-radius: 16px;
+    box-shadow: 0 4px 18px rgba(0, 0, 0, 0.08);
+    margin-bottom: 24px;
+    transition: all 0.3s ease;
+    overflow: hidden;
+    border: 1px solid #cfd8dc;
+}
+
+.faq-question {
+    width: 100%;
+    padding: 22px 26px;
+    font-size: 18px;
+    font-weight: 600;
+    color: #1a237e;
+    background: linear-gradient(to right, #c8e6c9, #b3e5fc);
+    border: none;
+    text-align: left;
+    cursor: pointer;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border-bottom: 1px solid #e0e0e0;
+    transition: background 0.3s ease;
+}
+
+.faq-question:hover {
+    background: linear-gradient(to right, #b2dfdb, #b3e5fc);
+}
+
+.faq-question .arrow {
+    font-size: 20px;
+    color: #455a64;
+    transition: transform 0.3s ease;
+}
+
+.faq-question.open .arrow {
+    transform: rotate(180deg);
+}
+
+.faq-answer {
+    padding: 18px 26px 24px 26px;
+    font-size: 16px;
+    line-height: 1.7;
+    color: #37474f;
+    background-color: #ffffff;
+    animation: fadeIn 0.4s ease-in-out;
+}
+
+.faq-answer a {
+    color: #1565c0;
+    font-weight: 500;
+    text-decoration: none;
+}
+
+.faq-answer a:hover {
+    text-decoration: underline;
+}
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(-8px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}

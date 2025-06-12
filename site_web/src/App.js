@@ -11,6 +11,8 @@ import ProfilePage from "./pages/ProfilePage";
 import GradedTestsPage from "./pages/GradedTestsPage";
 import NotificationsPage from "./pages/NotificationsPage";
 import NotAuthorized from "./pages/notAuthorized";
+import Contact from "./pages/contact";
+
 
 
 
@@ -31,6 +33,7 @@ function App() {
             <Route path="/notifications" element={<NotificationsPage/>} />
             <Route path="/graded-tests/:userId" element={<GradedTestsPage />} />
             <Route path="/not-authorized" element={<NotAuthorized/>} />
+            <Route path='/contact' element={<Contact />} />
 
 
 
