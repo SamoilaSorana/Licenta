@@ -133,12 +133,12 @@ public class LecturesLogic {
 
 
     public static List<Map<String, Object>> mapChaptersWithLectures(List<Chapter> chapters, List<Lecture> lectures) {
-        // Grupează lecțiile după ID-ul capitolului
+
         Map<Integer, List<Lecture>> lecturesByChapterId = lectures.stream()
                 .filter(l -> l.getChapter() != null)
                 .collect(Collectors.groupingBy(l -> l.getChapter().getId()));
 
-        // Creează lista finală
+
         List<Map<String, Object>> result = new ArrayList<>();
 
         for (Chapter chapter : chapters) {

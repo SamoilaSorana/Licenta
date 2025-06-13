@@ -33,7 +33,7 @@ public class JwtAuthorizationFilter extends OncePerRequestFilter {
 
         String token = extractToken(request);
 
-        // :white_check_mark: If no token is present, skip authentication and let Spring Security handle it
+
         if (token == null) {
             System.out.println(":warning: No JWT found. Skipping authentication.");
             chain.doFilter(request, response);

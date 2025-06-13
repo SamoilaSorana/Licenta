@@ -23,14 +23,14 @@ public class TestController {
         int userId = getIdfromheader(authHeader);
         TestLogic.submitAttemptFromAnswers(userId,id,answers);
         double grade=TestLogic.EvaluateTest(id,answers);
-        if(grade>6)
+        if(grade>=6)
         {
             Completed completed=new Completed(userId,id);
             TestLogic.sendCompleted(completed);
         }
         else {
             int count= TestLogic.Getcount(userId,id);
-            if(count>3)
+            if(count>=3)
             {
                 Help help=new Help();
                 help.setUserId(userId);

@@ -11,11 +11,10 @@ import java.util.List;
 public class AcountDAO {
     public static List<Acount> findAll() {
         List<Acount> AcountList = new ArrayList<>();
-        Connection conn = DataBase.GetInfo();
         String sql = "SELECT * FROM conturi";
-        try {
-            Statement stm = conn.createStatement();
-            try (ResultSet rs = stm.executeQuery(sql)) {
+         try (Connection conn = DataBase.GetInfo();
+              PreparedStatement stmt = conn.prepareStatement(sql)) {
+            try (ResultSet rs = stmt.executeQuery(sql)) {
                 while (rs.next()) {
 
                     Acount acount =new Acount(
@@ -33,20 +32,17 @@ public class AcountDAO {
         } catch (SQLException e) {
             e.printStackTrace();
         }
-        finally {
-            DataBase.closeConnection();
-        }
+         
 
         return AcountList;
     }
 
     public static Acount findById_User(int ID) {
         Acount acount = null;
-        Connection conn = DataBase.GetInfo();
         String sql = "SELECT * FROM conturi where ID= '" + ID + "'";
-        try {
-            Statement stm = conn.createStatement();
-            try (ResultSet rs = stm.executeQuery(sql)) {
+        try (Connection conn = DataBase.GetInfo();
+             PreparedStatement stmt = conn.prepareStatement(sql)) {
+            try (ResultSet rs = stmt.executeQuery(sql)) {
                 if (rs.next()) {
                     acount = new Acount(
                             rs.getInt("ID"),
@@ -62,20 +58,17 @@ public class AcountDAO {
         } catch (SQLException e) {
             e.printStackTrace();
         }
-        finally {
-            DataBase.closeConnection();
-        }
+
 
         return acount;
     }
 
     public static String findUserName(int ID) {
         String name ="";
-        Connection conn = DataBase.GetInfo();
         String sql = "SELECT Nume,Prenume FROM conturi where ID= '" + ID + "'";
-        try {
-            Statement stm = conn.createStatement();
-            try (ResultSet rs = stm.executeQuery(sql)) {
+        try (Connection conn = DataBase.GetInfo();
+             PreparedStatement stmt = conn.prepareStatement(sql)) {
+            try (ResultSet rs = stmt.executeQuery(sql)) {
                 if (rs.next()) {
                     name = "\""+ rs.getString("Nume") + " " + rs.getString("Prenume")+"\"";
                 }
@@ -83,20 +76,17 @@ public class AcountDAO {
         } catch (SQLException e) {
             e.printStackTrace();
         }
-        finally {
-            DataBase.closeConnection();
-        }
+
 
         return name;
     }
 
     public static Acount findByUsername(String username) {
         Acount acount = null;
-        Connection conn = DataBase.GetInfo();
         String sql = "SELECT * FROM conturi where Username= '" + username + "'";
-        try {
-            Statement stm = conn.createStatement();
-            try (ResultSet rs = stm.executeQuery(sql)) {
+        try (Connection conn = DataBase.GetInfo();
+             PreparedStatement stmt = conn.prepareStatement(sql)) {
+            try (ResultSet rs = stmt.executeQuery(sql)) {
                 if (rs.next()) {
                     acount = new Acount(
                             rs.getInt("ID"),
@@ -112,9 +102,7 @@ public class AcountDAO {
         } catch (SQLException e) {
             e.printStackTrace();
         }
-        finally {
-            DataBase.closeConnection();
-        }
+
 
         return acount;
     }
@@ -123,10 +111,9 @@ public class AcountDAO {
 
     public static boolean insert(Acount acount) {
         boolean inserted = false;
-        Connection conn = DataBase.GetInfo();
         String sql = "INSERT INTO conturi(Username,Parola,Nume,Prenume,Email) VALUES(?,?,?,?,?)";
-        try {
-            PreparedStatement stm = conn.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);
+        try (Connection conn = DataBase.GetInfo();
+             PreparedStatement stm = conn.prepareStatement(sql)) {
             stm.setString(1, acount.getUsername());
             stm.setString(2, acount.getParola());
             stm.setString(3, acount.getNume());
@@ -143,9 +130,7 @@ public class AcountDAO {
         } catch (SQLException e) {
             e.printStackTrace();
         }
-        finally {
-            DataBase.closeConnection();
-        }
+
 
         return inserted;
     }

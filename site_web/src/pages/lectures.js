@@ -3,6 +3,8 @@ import Cookies from "js-cookie";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
 import background from "../images/imagess.png";
+//import getUrl from "./geturl";
+
 
 const Lectures = () => {
     const [permissions, setPermissions] = useState([]);
@@ -11,6 +13,7 @@ const Lectures = () => {
     const [expandedChapters, setExpandedChapters] = useState(new Set());
     const [progress, setProgress] = useState({ completed: 0, total: 0 });
     const [animatedPercent, setAnimatedPercent] = useState(0);
+    const [selectedDifficulty, setSelectedDifficulty] = useState(null); // ⭐️ Nou
     const navigate = useNavigate();
 
     const hasPermission = (perm) => permissions.includes(perm);
@@ -18,7 +21,7 @@ const Lectures = () => {
     useEffect(() => {
         const token = Cookies.get("token");
         if (token) {
-            axios.get("http://localhost:4000/idm/api/auth/check-token", {
+            axios.get(`http://localhost:4000/idm/api/auth/check-token`, {
                 headers: { Authorization: `Bearer ${token}` },
             })
                 .then((res) => {
@@ -45,8 +48,8 @@ const Lectures = () => {
         if (hasPermission("VIEW_LECTURES")) {
             const token = Cookies.get("token");
             const endpoint = hasPermission("SEE_UNFILTERED_LECTURES")
-                ? "http://localhost:4000/logic/lecture/all_unfiltered"
-                : "http://localhost:4000/logic/lecture/all";
+                ? `http://localhost:4000/logic/lecture/all_unfiltered`
+                : `http://localhost:4000/logic/lecture/all`;
 
             axios.get(endpoint, {
                 headers: { Authorization: `Bearer ${token}` },
@@ -84,6 +87,15 @@ const Lectures = () => {
             newSet.has(chapterId) ? newSet.delete(chapterId) : newSet.add(chapterId);
             return newSet;
         });
+    };
+
+    const getDifficultyLabel = (val) => {
+        switch (val) {
+            case 1: return "Ușor";
+            case 2: return "Mediu";
+            case 3: return "Greu";
+            default: return "Toate";
+        }
     };
 
     if (loading) return <h2>Se încarcă...</h2>;
@@ -138,10 +150,76 @@ const Lectures = () => {
                 `}
             </style>
 
-            {chaptersWithLectures.map(({ chapter, lectures }) => {
+            {/* Butoane de filtrare după dificultate */}
+            <div style={{ marginBottom: "30px", display: "flex", gap: "10px" }}>
+                {[1, 2, 3].map((val) => (
+                    <button
+                        key={val}
+                        onClick={() => setSelectedDifficulty(val)}
+                        style={{
+                            backgroundColor: selectedDifficulty === val ? "#1565c0" : "#90caf9",
+                            color: selectedDifficulty === val ? "#fff" : "#000",
+                            padding: "10px 20px",
+                            borderRadius: "8px",
+                            border: "none",
+                            cursor: "pointer",
+                            fontWeight: "bold",
+                            fontSize: "16px",
+                            transition: "all 0.3s"
+                        }}
+                    >
+                        {getDifficultyLabel(val)}
+                    </button>
+                ))}
+                <button
+                    onClick={() => setSelectedDifficulty(null)}
+                    style={{
+                        backgroundColor: selectedDifficulty === null ? "#1565c0" : "#ccc",
+                        color: selectedDifficulty === null ? "#fff" : "#000",
+                        padding: "10px 20px",
+                        borderRadius: "8px",
+                        border: "none",
+                        cursor: "pointer",
+                        fontWeight: "bold",
+                        fontSize: "16px",
+                        transition: "all 0.3s"
+                    }}
+                >
+                    Toate
+                </button>
+            </div>
+
+
+            <h2 style={{
+                fontSize: "24px",
+                fontWeight: "bold",
+                marginBottom: "20px",
+                padding: "10px 20px",
+                backgroundColor: "#e3f2fd",
+                color: "#0d47a1",
+                borderRadius: "8px",
+                display: "inline-block",
+                boxShadow: "0 2px 6px rgba(0,0,0,0.1)"
+            }}>
+                Dificultate selectată: {selectedDifficulty === 1
+                ? "Ușor"
+                : selectedDifficulty === 2
+                    ? "Mediu"
+                    : selectedDifficulty === 3
+                        ? "Greu"
+                        : "Toate"}
+            </h2>
+
+            {chaptersWithLectures.map(({chapter, lectures}) => {
                 const isExpanded = expandedChapters.has(chapter.id);
+                const filteredLectures = selectedDifficulty
+                    ? lectures.filter(l => l.dificultate === selectedDifficulty)
+                    : lectures;
+
+                if (filteredLectures.length === 0) return null;
+
                 return (
-                    <div key={chapter.id} style={{ marginBottom: "40px" }}>
+                    <div key={chapter.id} style={{marginBottom: "40px"}}>
                         <div
                             onClick={() => toggleChapter(chapter.id)}
                             style={{
@@ -160,7 +238,11 @@ const Lectures = () => {
                             }}
                         >
                             <span>{`Chapter ${chapter.id} – ${chapter.name} – ${chapter.grade} – ${chapter.subject}`}</span>
-                            <span style={{ fontSize: "24px", transform: isExpanded ? "rotate(90deg)" : "rotate(0deg)", transition: "transform 0.3s" }}>
+                            <span style={{
+                                fontSize: "24px",
+                                transform: isExpanded ? "rotate(90deg)" : "rotate(0deg)",
+                                transition: "transform 0.3s"
+                            }}>
                                 ▶
                             </span>
                         </div>
@@ -175,7 +257,7 @@ const Lectures = () => {
                                 gridTemplateColumns: "repeat(auto-fill, minmax(300px, 1fr))",
                                 gap: "25px"
                             }}>
-                                {lectures.map((lecture) => (
+                                {filteredLectures.map((lecture) => (
                                     <div key={lecture.lectureId} style={{
                                         background: "rgba(255, 255, 255, 0.85)",
                                         borderRadius: "16px",
@@ -186,21 +268,22 @@ const Lectures = () => {
                                         display: "flex",
                                         flexDirection: "column",
                                         justifyContent: "space-between",
-                                        minHeight: "320px" // înălțime uniformă
+                                        minHeight: "320px"
                                     }}
                                          onMouseEnter={(e) => e.currentTarget.style.transform = "scale(1.03)"}
                                          onMouseLeave={(e) => e.currentTarget.style.transform = "scale(1.0)"}
                                     >
                                         <div>
-                                            <h2 style={{ fontSize: "22px", color: "#222" }}>{lecture.titlu}</h2>
-                                            <p><strong>Dificultate:</strong> {lecture.dificultate}</p>
-                                            <p style={{ marginTop: "10px", color: "#444", flexGrow: 1 }}>
+                                            <h2 style={{fontSize: "22px", color: "#222"}}>{lecture.titlu}</h2>
+                                            <p><strong>Dificultate:</strong> {getDifficultyLabel(lecture.dificultate)}
+                                            </p>
+                                            <p style={{marginTop: "10px", color: "#444", flexGrow: 1}}>
                                                 {(lecture.rezumat && lecture.rezumat.replace(/<[^>]*>?/gm, '').slice(0, 100) + '...') ||
                                                     "Această lecție te va ajuta să înțelegi mai bine conceptele matematice."}
                                             </p>
                                         </div>
 
-                                        <div style={{ marginTop: "auto" }}>
+                                        <div style={{marginTop: "auto"}}>
                                             <button
                                                 onClick={() => handleStartLecture(lecture.lectureId)}
                                                 style={{
@@ -222,7 +305,6 @@ const Lectures = () => {
                                         </div>
                                     </div>
                                 ))}
-
                             </div>
                         </div>
                     </div>

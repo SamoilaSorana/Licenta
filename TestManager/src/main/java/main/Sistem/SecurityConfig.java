@@ -16,7 +16,7 @@ public class SecurityConfig {
                 .authorizeHttpRequests(auth -> auth
                         .anyRequest().permitAll()
                 )
-                .httpBasic(Customizer.withDefaults()); // doar pentru test
+                .httpBasic(Customizer.withDefaults());
 
         return http.build();
     }

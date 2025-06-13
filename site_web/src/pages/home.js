@@ -30,7 +30,7 @@ const Home = () => {
 
     return (
         <div className="home-container">
-            {permisiuni.length > 0 ? (
+
                 <>
                     {/* Secțiune hero cu fundal imagine */}
                     <section className="hero-section-with-bg">
@@ -95,11 +95,7 @@ const Home = () => {
                         </div>
                     </section>
                 </>
-            ) : (
-                <h2 style={{ marginTop: "50px", textAlign: "center" }}>
-                    Welcome! Please login to access the platform.
-                </h2>
-            )}
+
         </div>
     );
 };

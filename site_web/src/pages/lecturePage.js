@@ -24,18 +24,18 @@ const LecturePage = () => {
                 })
                 .catch((error) => {
                     console.log("Eroare la preluarea lecției:", error);
-                    navigate("/lectures"); // Dacă dă eroare, întoarce utilizatorul la lista de lecții
+                    navigate("/lectures");
                 })
                 .finally(() => setLoading(false));
         } else {
-            navigate("/"); // Dacă nu există token, du-l acasă
+            navigate("/");
         }
     }, [id, navigate]);
 
     const formatContent = (text) => {
         if (!text) return "";
 
-        // Dacă nu conține HTML, transformă fiecare linie într-un paragraf
+
         if (!text.includes("<") && !text.includes("</")) {
             return text
                 .split("\n")
@@ -43,7 +43,7 @@ const LecturePage = () => {
                 .join("");
         }
 
-        // Dacă e deja HTML, returnează direct
+
         return text;
     };
 

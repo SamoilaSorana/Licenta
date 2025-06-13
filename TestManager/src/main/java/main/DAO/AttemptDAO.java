@@ -91,9 +91,5 @@ public class AttemptDAO {
 
         return list;
     }
-
-
-
-
 }
 

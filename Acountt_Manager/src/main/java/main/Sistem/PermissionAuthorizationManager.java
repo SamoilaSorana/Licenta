@@ -35,11 +35,11 @@ public class PermissionAuthorizationManager implements AuthorizationManager<Requ
             return new AuthorizationDecision(false);
         }
 
-        // Extract role from Authentication principal (Stored in JWT token)
+
         String role = extractRoleFromAuthentication(auth);
         System.out.println("✅ Extracted Role: " + role);
 
-        // Fetch permissions for this role from the database
+
         List<Permisiune> permisiuneList = PermisiuniDAO.getPermisionsByRol(role);
         List<String> permissions = new ArrayList<>();
         for (Permisiune permisiune : permisiuneList) {
@@ -48,7 +48,7 @@ public class PermissionAuthorizationManager implements AuthorizationManager<Requ
 
         System.out.println("🔍 Permissions found for role [" + role + "]: " + permissions);
 
-        // Get the required permission for this endpoint
+
         String requiredPermission = getRequiredPermissionForEndpoint(requestURI);
         System.out.println("🔍 Required permission for this request: " + requiredPermission);
 
@@ -66,17 +66,17 @@ public class PermissionAuthorizationManager implements AuthorizationManager<Requ
     private String extractRoleFromAuthentication(Authentication auth) {
         for (GrantedAuthority authority : auth.getAuthorities()) {
             if (authority.getAuthority().startsWith("ROLE_")) {
-                return authority.getAuthority().replace("ROLE_", ""); // Remove "ROLE_" prefix
+                return authority.getAuthority().replace("ROLE_", "");
             }
         }
-        return "ANONYMOUS"; // If no valid role found, default to ANONYMOUS
+        return "ANONYMOUS";
     }
 
     private boolean doesNotRequireLogin(String requestURI) {
         return requestURI.startsWith("/user/login") || requestURI.startsWith("/user/register");
     }
 
-    // Example: Define permissions based on URL
+
     private String getRequiredPermissionForEndpoint(String uri) {
         if (uri.startsWith("/admin/accounts")) return "GET_ACCOUNTS";
         return null; // No permission required

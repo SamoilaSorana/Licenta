@@ -51,7 +51,7 @@ public class SecurityConfig {
 
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
-        System.out.println("✅ SecurityConfig is active");
+        System.out.println(" SecurityConfig is active");
 
         http
                 .cors(cors -> cors.configurationSource(request -> {
@@ -66,19 +66,19 @@ public class SecurityConfig {
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .addFilterBefore(jwtAuthorizationFilter, SecurityContextPersistenceFilter.class)
                 .authorizeHttpRequests(authz -> authz
-                        // 🔓 Permitem explicit înregistrarea și login-ul
+
                         .requestMatchers("/user/register", "/user/login", "/api/auth/**").permitAll()
 
-                        // 🔒 Protejăm restul doar după ce rutele publice au fost permise
+
                         .requestMatchers("/admin/**").access(permissionAuthorizationManager)
                         .requestMatchers("/user/**").access(permissionAuthorizationManager)
 
-                        // 🔒 Orice altceva necesită autentificare
+
                         .anyRequest().authenticated()
                 )
                 .exceptionHandling(exception -> exception.authenticationEntryPoint((request, response, authException) -> {
                     if (!response.isCommitted()) {
-                        System.out.println("❌ Access denied! 403 returned.");
+                        System.out.println(" Access denied! 403 returned.");
                         response.sendError(HttpServletResponse.SC_FORBIDDEN, "Access Denied");
                     }
                 }));

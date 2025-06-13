@@ -71,7 +71,7 @@ public class LectureDAO {
         return lecture;
     }
 
-    // Metodă pentru a adăuga o lecție
+
     public static boolean insert(Lecture lecture) {
 
         String sql = "INSERT INTO Lecture (titlu, dificultate, example_question_id, continut,rezumat) VALUES (?, ?, ?, ?,?)";
@@ -100,7 +100,7 @@ public class LectureDAO {
         return false;
     }
 
-    // Metodă pentru a obține ultima lecție adăugată
+
     public static Lecture findLast() {
         Lecture lecture = null;
 

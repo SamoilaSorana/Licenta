@@ -11,7 +11,7 @@ public class HelperFunctions {
     public static int getIdfromheader(String header) {
         try {
 
-            // Example: "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9..."
+
             String token = header.replace("Bearer ", "");
 
             String[] parts = token.split("\\.");

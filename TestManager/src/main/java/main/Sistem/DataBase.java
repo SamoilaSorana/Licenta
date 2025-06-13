@@ -18,7 +18,7 @@ public class DataBase {
         config.setJdbcUrl(url);
         config.setUsername(username);
         config.setPassword(password);
-        config.setMaximumPoolSize(10); // numărul maxim de conexiuni în pool
+        config.setMaximumPoolSize(10);
         config.setMinimumIdle(2);
         config.setIdleTimeout(30000);
         config.setConnectionTimeout(30000);

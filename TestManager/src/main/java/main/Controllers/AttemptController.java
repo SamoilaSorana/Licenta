@@ -66,20 +66,20 @@ public class AttemptController {
 
     @GetMapping("/user/{id}/attempts")
     public ResponseEntity<?> getAllAttemptAnswers(@PathVariable("id") int id) {
-        List<Attempt> allAttempts = AttemptDAO.findAllbyUserId(id); // DAO method to get all attempts
+        List<Attempt> allAttempts = AttemptDAO.findAllbyUserId(id);
         List<AttemptAnswers> result = new ArrayList<>();
 
         for (Attempt attempt : allAttempts) {
             List<AttemptInfo> infos = AttemptInfoDAO.findByAttemptId(attempt.getAttemptId());
 
-            // group infos by questionId
+
             Map<Integer, List<Integer>> grouped = new HashMap<>();
             for (AttemptInfo info : infos) {
                 grouped.computeIfAbsent(info.getQuestionId(), k -> new ArrayList<>())
                         .add(info.getAnswerId());
             }
 
-            // convert to AnswerFromClient
+
             List<AnswerFromClient> answers = new ArrayList<>();
             for (Map.Entry<Integer, List<Integer>> entry : grouped.entrySet()) {
                 answers.add(new AnswerFromClient(entry.getKey(), entry.getValue()));

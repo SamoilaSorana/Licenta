@@ -14,10 +14,10 @@ import java.util.List;
 public class JwtTokenUtil {
 
     private final String secret = "mySecretKey";
-    private final long expiration = 604800L; // 7 days in seconds
+    private final long expiration = 604800L;
 
 
-    // New method that generates a token based on your User object
+
     public String generateTokenFromUser(Acount user) {
         Date now = new Date();
         Date expiryDate = new Date(now.getTime() + expiration * 1000);
@@ -35,22 +35,22 @@ public class JwtTokenUtil {
 
     public String getUsernameFromToken(String token) {
         Claims claims = extractClaims(token);
-        return claims.getSubject(); // Username is stored as "sub"
+        return claims.getSubject();
     }
     public List<String> getPermissionsFromToken(String token) {
         Claims claims = extractClaims(token);
-        return claims.get("permisiuni", List.class); // It will return a List<String>
+        return claims.get("permisiuni", List.class);
     }
     public String getRoleFromToken(String token) {
         Claims claims = extractClaims(token);
-        return claims.get("role", String.class); // Extract the "role" claim
+        return claims.get("role", String.class);
     }
     public boolean validateToken(String token) {
         try {
-            Jwts.parser().setSigningKey(secret).parseClaimsJws(token); // Parse and validate
+            Jwts.parser().setSigningKey(secret).parseClaimsJws(token);
             return true;
         } catch (Exception e) {
-            System.out.println(":x: Invalid JWT: " + e.getMessage()); // Debugging
+            System.out.println(":x: Invalid JWT: " + e.getMessage());
             return false;
         }
     }

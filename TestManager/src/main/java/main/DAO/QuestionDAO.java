@@ -40,8 +40,8 @@ public class QuestionDAO {
 
         for (AbstractMap.SimpleEntry<Answer, Boolean> entry : entries) {
             Map<String, Object> map = new HashMap<>();
-            map.put("answer", entry.getKey());      // Answer object
-            map.put("correct", entry.getValue());   // Boolean
+            map.put("answer", entry.getKey());
+            map.put("correct", entry.getValue());
             result.add(map);
         }
 

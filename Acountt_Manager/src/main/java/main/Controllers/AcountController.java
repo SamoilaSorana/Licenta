@@ -30,19 +30,15 @@ public class AcountController {
 
     @PostMapping("/user/login")
     public ResponseEntity<?> login(@RequestBody LoginRequest loginRequest) {
-        // Fetch the user by username from your database
         Acount user = AcountDAO.findByUsername(loginRequest.getUsername());
-
         if (user == null) {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("User not found");
         }
 
-        // Verify the password; assume verifyPassword handles hashing/encoding
         if (!authenticate(loginRequest.getUsername(),loginRequest.getPassword())) {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Invalid credentials");
         }
 
-        // Generate a token using your JWT utility; you might need to adjust the token generation
         String token = jwtTokenUtil.generateTokenFromUser(user);
         return ResponseEntity.ok(new JwtAuthenticationResponse(token));
     }
@@ -53,7 +49,7 @@ public class AcountController {
         if (acount == null) {
             return new ResponseEntity<>(null, HttpStatus.NOT_FOUND);
         }
-        return new ResponseEntity<>(acount, HttpStatus.OK); // Returnăm contul găsit
+        return new ResponseEntity<>(acount, HttpStatus.OK);
     }
 
     @GetMapping("/user/acount/name/{id}")
@@ -62,7 +58,7 @@ public class AcountController {
         if (Objects.equals(name, "")) {
             return new ResponseEntity<>(null, HttpStatus.NOT_FOUND);
         }
-        return new ResponseEntity<>(name, HttpStatus.OK); // Returnăm contul găsit
+        return new ResponseEntity<>(name, HttpStatus.OK);
     }
 
 
@@ -78,9 +74,9 @@ public class AcountController {
 
     @PostMapping("/user/register")
     public ResponseEntity<?> add(@RequestBody Acount acount) {
-        System.out.println("🚀 Primit cont nou: " + acount);
+        System.out.println("" + acount);
 
-        // Conversie din String în obiect Rol
+
         Rol rol = RolDAO.findByNume("User");
         if (rol == null) {
             return ResponseEntity.badRequest().body("Rol invalid!");

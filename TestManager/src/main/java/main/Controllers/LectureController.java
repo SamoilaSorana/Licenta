@@ -46,7 +46,7 @@ public class LectureController {
     public ResponseEntity<?> add(@RequestBody Lecture lecture) {
         boolean inserted = LectureDAO.insert(lecture);
         if (inserted) {
-            lecture = LectureDAO.findLast(); // sau după ID dacă îl știi
+            lecture = LectureDAO.findLast();
             return new ResponseEntity<>(lecture, HttpStatus.CREATED);
         }
         return new ResponseEntity<>(null, HttpStatus.UNPROCESSABLE_ENTITY);

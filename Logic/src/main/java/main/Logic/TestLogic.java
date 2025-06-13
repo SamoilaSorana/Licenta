@@ -130,7 +130,7 @@ public class TestLogic {
             e.printStackTrace();
         }
 
-        return -1; // eroare
+        return -1;
     }
 
 
@@ -173,7 +173,7 @@ public class TestLogic {
 
             HttpResponse<String> response = client.send(request, HttpResponse.BodyHandlers.ofString());
 
-            // ✅ Returnează 1 dacă a fost creat cu succes
+
             if (response.statusCode() == 200 || response.statusCode() == 201) {
                 return 1;
             } else {
@@ -183,7 +183,7 @@ public class TestLogic {
             e.printStackTrace();
         }
 
-        return -1; // eroare
+        return -1;
     }
 
 
@@ -211,7 +211,7 @@ public class TestLogic {
             e.printStackTrace();
         }
 
-        return -1; // eroare
+        return -1;
     }
 
 
@@ -244,7 +244,7 @@ public class TestLogic {
 
 
     public static void submitAttemptFromAnswers(int userId, int lectureId, List<AnswerFromClient> answers) {
-        // 1. Trimite Attempt și obține ID-ul
+
         Attempt attempt = new Attempt();
         attempt.setUserId(userId);
         attempt.setLectureId(lectureId);
@@ -255,7 +255,7 @@ public class TestLogic {
             return;
         }
 
-        // 2. Transformă AnswerFromClient în AttemptInfo
+
         List<AttemptInfo> infos = new ArrayList<>();
         for (AnswerFromClient answer : answers) {
             for (Integer answerId : answer.getAnswerIds()) {
@@ -267,7 +267,7 @@ public class TestLogic {
             }
         }
 
-        // 3. Trimite AttemptInfos
+
         sendAttemptInfos(infos);
     }
 
@@ -303,9 +303,9 @@ public class TestLogic {
         for (AttemptAnswers attempt : attempts) {
             int attemptId = attempt.getAttemptId();
             int lectureId = attempt.getLectureId();
-            List<Question> questions = GetAllQuestion(lectureId); // deja ai această metodă
+            List<Question> questions = GetAllQuestion(lectureId);
 
-            // Map: questionId → List<answerIds>
+
             Map<Integer, List<Integer>> userAnswers = attempt.getAnswers().stream()
                     .collect(Collectors.toMap(
                             AnswerFromClient::getQuestionId,

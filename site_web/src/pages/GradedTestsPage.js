@@ -61,16 +61,16 @@ const GradedTestsPage = () => {
         const chosenCorrect = correct.filter(a => a.chosenByUser);
         const chosenIncorrect = answers.filter(a => a.chosenByUser && !a.correct);
 
-        if (chosenCorrect.length === correct.length && chosenIncorrect.length === 0) return "#c8e6c9"; // green
-        if (chosenCorrect.length > 0 && (chosenCorrect.length < correct.length || chosenIncorrect.length > 0)) return "#ffe0b2"; // orange
+        if (chosenCorrect.length === correct.length && chosenIncorrect.length === 0) return "#c8e6c9";
+        if (chosenCorrect.length > 0 && (chosenCorrect.length < correct.length || chosenIncorrect.length > 0)) return "#ffe0b2";
         return "#ffcdd2"; // red
     };
 
     const getAnswerColor = (answer) => {
-        if (answer.correct && answer.chosenByUser) return "#a5d6a7"; // green
-        if (answer.correct && !answer.chosenByUser) return "#ffe082"; // orange
-        if (!answer.correct && answer.chosenByUser) return "#ef9a9a"; // red
-        return "#f5f5f5"; // default
+        if (answer.correct && answer.chosenByUser) return "#a5d6a7";
+        if (answer.correct && !answer.chosenByUser) return "#ffe082";
+        if (!answer.correct && answer.chosenByUser) return "#ef9a9a";
+        return "#f5f5f5"; 
     };
 
     const groupedAttempts = attempts.reduce((acc, attempt) => {
