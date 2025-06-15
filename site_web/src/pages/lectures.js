@@ -3,7 +3,7 @@ import Cookies from "js-cookie";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
 import background from "../images/imagess.png";
-//import getUrl from "./geturl";
+
 
 
 const Lectures = () => {
@@ -13,7 +13,7 @@ const Lectures = () => {
     const [expandedChapters, setExpandedChapters] = useState(new Set());
     const [progress, setProgress] = useState({ completed: 0, total: 0 });
     const [animatedPercent, setAnimatedPercent] = useState(0);
-    const [selectedDifficulty, setSelectedDifficulty] = useState(null); // ⭐️ Nou
+    const [selectedDifficulty, setSelectedDifficulty] = useState(null);
     const navigate = useNavigate();
 
     const hasPermission = (perm) => permissions.includes(perm);
@@ -150,7 +150,7 @@ const Lectures = () => {
                 `}
             </style>
 
-            {/* Butoane de filtrare după dificultate */}
+            {}
             <div style={{ marginBottom: "30px", display: "flex", gap: "10px" }}>
                 {[1, 2, 3].map((val) => (
                     <button

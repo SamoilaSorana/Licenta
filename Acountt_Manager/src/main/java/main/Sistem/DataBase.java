@@ -1,34 +1,44 @@
 package main.Sistem;
 
+import com.zaxxer.hikari.HikariConfig;
+import com.zaxxer.hikari.HikariDataSource;
+
 import java.sql.Connection;
-import java.sql.DriverManager;
 import java.sql.SQLException;
 
 public class DataBase {
     private static final String url = "jdbc:mariadb://localhost:3306/conturi";
     private static final String username = "root";
     private static final String password = "1234";
-    private static Connection conn = null;
-    public static void closeConnection() {
-        if (conn != null) {
-            try {
-                conn.close();
-                conn = null;
-            } catch (SQLException e) {
-                e.printStackTrace();
-            }
+
+    private static final HikariConfig config = new HikariConfig();
+    private static final HikariDataSource dataSource;
+
+    static {
+        config.setJdbcUrl(url);
+        config.setUsername(username);
+        config.setPassword(password);
+        config.setMaximumPoolSize(10);
+        config.setMinimumIdle(2);
+        config.setIdleTimeout(30000);
+        config.setConnectionTimeout(30000);
+        config.setMaxLifetime(1800000);
+
+        dataSource = new HikariDataSource(config);
+    }
+
+    public static Connection GetInfo() {
+        try {
+            return dataSource.getConnection();
+        } catch (SQLException e) {
+            e.printStackTrace();
+            return null;
         }
     }
-    public static Connection GetInfo()
-    {
-        if(conn == null)
-        {
-            try{
-                conn = DriverManager.getConnection(url,username,password);
-            } catch (SQLException e) {
-                e.printStackTrace();
-            }
+
+    public static void closePool() {
+        if (dataSource != null && !dataSource.isClosed()) {
+            dataSource.close();
         }
-        return conn;
     }
 }

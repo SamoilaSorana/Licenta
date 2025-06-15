@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import Cookies from "js-cookie";
 import axios from "axios";
-import './style.css'; // ✅ Asigură-te că ai importat stilul
+import './style.css';
 
 const LecturePage = () => {
     const { id } = useParams(); // lectureId din URL

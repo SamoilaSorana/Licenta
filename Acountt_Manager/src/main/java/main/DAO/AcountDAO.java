@@ -14,7 +14,7 @@ public class AcountDAO {
         String sql = "SELECT * FROM conturi";
          try (Connection conn = DataBase.GetInfo();
               PreparedStatement stmt = conn.prepareStatement(sql)) {
-            try (ResultSet rs = stmt.executeQuery(sql)) {
+            try (ResultSet rs = stmt.executeQuery()) {
                 while (rs.next()) {
 
                     Acount acount =new Acount(
@@ -42,7 +42,7 @@ public class AcountDAO {
         String sql = "SELECT * FROM conturi where ID= '" + ID + "'";
         try (Connection conn = DataBase.GetInfo();
              PreparedStatement stmt = conn.prepareStatement(sql)) {
-            try (ResultSet rs = stmt.executeQuery(sql)) {
+            try (ResultSet rs = stmt.executeQuery()) {
                 if (rs.next()) {
                     acount = new Acount(
                             rs.getInt("ID"),
@@ -68,7 +68,7 @@ public class AcountDAO {
         String sql = "SELECT Nume,Prenume FROM conturi where ID= '" + ID + "'";
         try (Connection conn = DataBase.GetInfo();
              PreparedStatement stmt = conn.prepareStatement(sql)) {
-            try (ResultSet rs = stmt.executeQuery(sql)) {
+            try (ResultSet rs = stmt.executeQuery()) {
                 if (rs.next()) {
                     name = "\""+ rs.getString("Nume") + " " + rs.getString("Prenume")+"\"";
                 }
@@ -86,7 +86,7 @@ public class AcountDAO {
         String sql = "SELECT * FROM conturi where Username= '" + username + "'";
         try (Connection conn = DataBase.GetInfo();
              PreparedStatement stmt = conn.prepareStatement(sql)) {
-            try (ResultSet rs = stmt.executeQuery(sql)) {
+            try (ResultSet rs = stmt.executeQuery()) {
                 if (rs.next()) {
                     acount = new Acount(
                             rs.getInt("ID"),

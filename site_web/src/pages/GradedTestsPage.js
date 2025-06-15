@@ -70,7 +70,7 @@ const GradedTestsPage = () => {
         if (answer.correct && answer.chosenByUser) return "#a5d6a7";
         if (answer.correct && !answer.chosenByUser) return "#ffe082";
         if (!answer.correct && answer.chosenByUser) return "#ef9a9a";
-        return "#f5f5f5"; 
+        return "#f5f5f5";
     };
 
     const groupedAttempts = attempts.reduce((acc, attempt) => {

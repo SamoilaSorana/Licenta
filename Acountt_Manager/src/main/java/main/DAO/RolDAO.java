@@ -12,7 +12,7 @@ public class RolDAO {
         String sql = "SELECT * FROM roluri where ID= '" + ID + "'";
         try (Connection conn = DataBase.GetInfo();
              PreparedStatement stmt = conn.prepareStatement(sql)) {
-            try (ResultSet rs = stmt.executeQuery(sql)) {
+            try (ResultSet rs = stmt.executeQuery()) {
                 if (rs.next()) {
                     rol = new Rol(
                             rs.getInt("ID"),
@@ -34,7 +34,7 @@ public class RolDAO {
         String sql = "SELECT * FROM roluri WHERE Rol = '" + nume + "'";
         try (Connection conn = DataBase.GetInfo();
              PreparedStatement stmt = conn.prepareStatement(sql)) {
-            try (ResultSet rs = stmt.executeQuery(sql)) {
+            try (ResultSet rs = stmt.executeQuery()) {
                 if (rs.next()) {
                     rol = new Rol(
                             rs.getInt("ID"),
@@ -57,7 +57,7 @@ public class RolDAO {
         String sql = "SELECT * FROM roluri WHERE ID = (SELECT ID_rol FROM relatie_cont_rol WHERE ID_cont= '" + ID + "');";
         try (Connection conn = DataBase.GetInfo();
              PreparedStatement stmt = conn.prepareStatement(sql)) {
-            try (ResultSet rs = stmt.executeQuery(sql)) {
+            try (ResultSet rs = stmt.executeQuery()) {
                 if (rs.next()) {
                     rol = new Rol(
                             rs.getInt("ID"),
